@@ -418,11 +418,7 @@ footer strong {
     }
 }
 </style>
-    <script>
-        function g1(){
-            location.window.href="index.html";
-        }
-    </script>
+   
 </head>
 
 <body>
@@ -877,7 +873,8 @@ footer strong {
             <button type="reset" class="secondary">
                 Reset Form
             </button>
-            <button  type="button" class="primary"  onclick="g1()"> main menu</button>
+            <button  type="button" class="primary"  onclick="g1()"> main menu
+            </button>
         </div>
 
         <p class="description" style="margin-top:15px">
@@ -999,7 +996,13 @@ form.addEventListener("change", updateSummary);
 form.addEventListener("reset", () => setTimeout(updateSummary, 0));
 
 updateSummary();
-</script>
+    </script>
+
+     <script>
+        function g1(){
+            location.window.href="index.html";
+        }
+    </script>
 
 </body>
 </html>
