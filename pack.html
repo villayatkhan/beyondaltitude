@@ -969,6 +969,7 @@ async function copyRequest() {
     try {
         await navigator.clipboard.writeText(request);
         alert("Thank you for your interest! Our team will contact you soon.");
+        window.location.href="pack.html";
     } catch (error) {
         const area = document.createElement("textarea");
         area.value = request;
@@ -980,6 +981,7 @@ async function copyRequest() {
 
         if (copied) {
             alert("Thank you for your interest! Our team will contact you soon.");
+               window.location.href="pack.html";
         } else {
             prompt("Copy your tour request:", request);
         }
