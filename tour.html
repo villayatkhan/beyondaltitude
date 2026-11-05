@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#173e35">
+<title>Custom Ladakh Tour | Beyond Altitude</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --green:#173e35;
+  --green2:#527466;
+  --gold:#c69b58;
+  --bg:#f5f6f4;
+  --light:#eef3ef;
+  --ink:#26332f;
+  --muted:#718078;
+  --line:#e7ece8;
+}
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
+body {
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.5;
+}
+header {
+  background:linear-gradient(110deg,var(--green),var(--green2));
+  color:#fff;
+  padding:28px max(20px,calc((100% - 1050px)/2));
+}
+header a {
+  color:#f1d29b;
+  text-decoration:none;
+  font-size:13px;
+}
+header h1 {
+  font-size:28px;
+  margin:13px 0 6px;
+}
+header p {
+  color:#e0e9e3;
+  font-size:14px;
+}
+main {
+  max-width:1050px;
+  margin:28px auto;
+  padding:0 18px 50px;
+}
+.card {
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:23px;
+  margin-bottom:18px;
+}
+.card h2 {
+  font-size:18px;
+  color:var(--green);
+  margin-bottom:8px;
+}
+.muted {
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.6;
+  margin-bottom:16px;
+}
+.grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.field {
+  margin-bottom:14px;
+}
+.field label {
+  display:block;
+  font-size:13px;
+  font-weight:bold;
+  color:#52635a;
+  margin-bottom:7px;
+}
+.field input,
+.field select,
+.field textarea {
+  width:100%;
+  padding:12px;
+  border:1px solid #d9e1da;
+  border-radius:7px;
+  background:#fff;
+  color:var(--ink);
+  font-size:14px;
+}
+.field textarea {
+  min-height:95px;
+  resize:vertical;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline:2px solid #b8cfc0;
+  border-color:var(--green);
+}
+.destinations {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.destination {
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:12px;
+  background:#fafcf9;
+}
+.destination label {
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+  font-size:14px;
+  font-weight:600;
+  color:var(--ink);
+  cursor:pointer;
+}
+.destination small {
+  display:block;
+  color:var(--muted);
+  font-weight:normal;
+  margin:5px 0 0 25px;
+}
+.destination input {
+  margin-top:3px;
+  accent-color:var(--green);
+}
+.order-list {
+  margin-top:14px;
+  padding:14px;
+  background:var(--light);
+  border-radius:9px;
+}
+.order-row {
+  display:grid;
+  grid-template-columns:1fr 110px;
+  align-items:center;
+  gap:10px;
+  padding:7px 0;
+  border-bottom:1px solid #dce6df;
+  font-size:13px;
+}
+.order-row:last-child {
+  border-bottom:0;
+}
+.order-row input {
+  width:100%;
+  padding:8px;
+  border:1px solid #cdd9d0;
+  border-radius:6px;
+}
+.traveller {
+  background:#f7f9f7;
+  padding:15px;
+  border-radius:9px;
+  margin:12px 0;
+}
+.traveller h3 {
+  font-size:14px;
+  color:var(--green);
+  margin-bottom:10px;
+}
+.btn {
+  display:inline-block;
+  background:var(--green);
+  color:#fff;
+  padding:12px 18px;
+  border:0;
+  border-radius:7px;
+  cursor:pointer;
+  text-decoration:none;
+  font-size:14px;
+}
+.btn:hover {
+  background:#31594d;
+}
+.btn:disabled {
+  opacity:.55;
+  cursor:not-allowed;
+}
+.message {
+  display:none;
+  padding:12px 15px;
+  border-radius:8px;
+  margin-bottom:18px;
+  font-size:13px;
+}
+.message.error {
+  display:block;
+  background:#fff0ee;
+  color:#a33b32;
+}
+.message.info {
+  display:block;
+  background:#edf4ef;
+  color:#31594d;
+}
+.message.success {
+  display:block;
+  background:#e5f4e8;
+  color:#246b40;
+}
+.actions {
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+@media(max-width:650px) {
+  .grid,.destinations {
+    grid-template-columns:1fr;
+  }
+  .card {
+    padding:17px;
+  }
+  header h1 {
+    font-size:23px;
+  }
+  .order-row {
+    grid-template-columns:1fr 85px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="dashboard.html">← Back to Customer Dashboard</a>
+  <h1>Build Your Custom Ladakh Tour</h1>
+  <p>Choose the places you want to explore in Ladakh and arrange them in your preferred visit order.</p>
+</header>
+
+<main>
+  <div id="message" class="message"></div>
+
+  <form id="customTourForm">
+
+    <section class="card">
+      <h2>1. Your Travel Plan</h2>
+      <p class="muted">Select your travel date, trip duration and the number of travellers.</p>
+
+      <div class="grid">
+        <div class="field">
+          <label for="travelDate">Travel Date</label>
+          <input type="date" id="travelDate" required>
+        </div>
+
+        <div class="field">
+          <label for="durationDays">Duration (days)</label>
+          <input type="number" id="durationDays" min="1" max="60" value="5" required>
+        </div>
+
+        <div class="field">
+          <label for="travellerCount">Number of Travellers</label>
+          <input type="number" id="travellerCount" min="1" max="20" value="1" required>
+        </div>
+
+        <div class="field">
+          <label for="accommodation">Accommodation Preference</label>
+          <select id="accommodation" required>
+            <option value="">Choose accommodation</option>
+            <option value="Budget homestay">Budget homestay</option>
+            <option value="Standard hotel">Standard hotel</option>
+            <option value="Premium hotel">Premium hotel</option>
+            <option value="Luxury stay">Luxury stay</option>
+            <option value="No accommodation required">No accommodation required</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="transport">Transport Preference</label>
+          <select id="transport" required>
+            <option value="">Choose transport</option>
+            <option value="Shared vehicle">Shared vehicle</option>
+            <option value="Private vehicle">Private vehicle</option>
+            <option value="SUV">SUV</option>
+            <option value="Bike">Bike</option>
+            <option value="Self-arranged transport">Self-arranged transport</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>2. Select Ladakh Destinations</h2>
+      <p class="muted">
+        Select multiple destinations from Leh and Kargil.
+        Set their visit order below (1 means first stop).
+      </p>
+
+      <div id="destinationList" class="destinations">
+        <p class="muted">Loading destinations…</p>
+      </div>
+
+      <div id="orderPanel" class="order-list" hidden>
+        <strong style="font-size:14px;color:#173e35">Your visit order</strong>
+        <div id="orderList"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>3. Traveller Contact Details</h2>
+      <p class="muted">The booking contact will receive updates about this temporary booking request.</p>
+
+      <div class="grid">
+        <div class="field">
+          <label for="contactName">Booking Contact Name</label>
+          <input type="text" id="contactName" required placeholder="Full name">
+        </div>
+
+        <div class="field">
+          <label for="contactPhone">Contact Phone</label>
+          <input type="tel" id="contactPhone" required placeholder="Mobile number">
+        </div>
+
+        <div class="field">
+          <label for="contactEmail">Contact Email</label>
+          <input type="email" id="contactEmail" required placeholder="Email address">
+        </div>
+      </div>
+
+      <h2 style="margin-top:15px">Traveller Information</h2>
+      <div id="travellerFields"></div>
+    </section>
+
+    <section class="card">
+      <h2>4. Special Requirements</h2>
+
+      <div class="field">
+        <label for="specialRequirements">Additional requests (optional)</label>
+        <textarea id="specialRequirements"
+          placeholder="Food preferences, accessibility needs, sightseeing interests or other requests"></textarea>
+      </div>
+
+      <p class="muted">
+        Submitting creates a temporary booking request only.
+        No payment is taken on this page. Your final price and availability
+        will be confirmed by Beyond Altitude.
+      </p>
+
+      <div class="actions">
+        <button class="btn" type="submit" id="submitBtn">
+          Submit Custom Tour Request
+        </button>
+
+        <a class="btn" style="background:#e9eee9;color:#173e35"
+           href="dashboard.html">Cancel</a>
+      </div>
+    </section>
+
+  </form>
+</main>
+
+<script>
+
+const SUPABASE_URL = "https://gtiqyltzlcqzcpqnpsbb.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_fwzYRS8chR8nN3A2C7h08g_XS5zmDw3";
+
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const $ = id => document.getElementById(id);
+
+let currentUser = null;
+let customPackage = null;
+let destinations = [];
+
+const safe = value => String(value ?? "").replace(/[&<>"']/g, ch => ({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#39;"
+}[ch]));
+
+function showMessage(message, type = "info") {
+  $("message").className = "message " + type;
+  $("message").textContent = message;
+  $("message").scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
+}
+
+function setMinimumDate() {
+  const now = new Date();
+  now.setDate(now.getDate() + 1);
+
+  $("travelDate").min = new Date(
+    now.getTime() - now.getTimezoneOffset() * 60000
+  ).toISOString().split("T")[0];
+}
+
+async function loadUserAndPackage() {
+  const {data,error} = await db.auth.getSession();
+
+  if (error || !data.session) {
+    window.location.replace("login.html");
+    return false;
+  }
+
+  currentUser = data.session.user;
+
+  const meta = currentUser.user_metadata || {};
+
+  $("contactName").value = meta.full_name || meta.name || "";
+  $("contactEmail").value = currentUser.email || "";
+
+  const packageId = new URLSearchParams(
+    window.location.search
+  ).get("package_id");
+
+  if (!packageId) {
+    throw new Error(
+      "Custom Ladakh Package was not selected from your dashboard. Please return and select it again."
+    );
+  }
+
+  const {data:pkg,error:pkgError} = await db
+    .from("packages")
+    .select("id,package_name,package_type,is_active")
+    .eq("id",packageId)
+    .eq("is_active",true)
+    .maybeSingle();
+
+  if (pkgError) throw pkgError;
+
+  if (!pkg || String(pkg.package_type || "").toLowerCase() !== "custom") {
+    throw new Error(
+      "The selected package is not an active Custom Ladakh Package."
+    );
+  }
+
+  customPackage = pkg;
+  return true;
+}
+
+async function loadDestinations() {
+  const {data,error} = await db
+    .from("destinations")
+    .select("id,destination_name,region,description")
+    .eq("is_active",true)
+    .order("region",{ascending:true})
+    .order("destination_name",{ascending:true});
+
+  if (error) throw error;
+
+  destinations = data || [];
+
+  if (!destinations.length) {
+    $("destinationList").innerHTML =
+      '<p class="muted">No active destinations are available right now. Please contact Beyond Altitude.</p>';
+    return;
+  }
+
+  $("destinationList").innerHTML = ["Leh","Kargil"].map(region => {
+    const items = destinations.filter(d => d.region === region);
+
+    if (!items.length) return "";
+
+    return `
+      <div style="grid-column:1/-1">
+        <h3 style="color:#173e35;font-size:15px;margin:8px 0">
+          ${safe(region)} Region
+        </h3>
+      </div>
+    ` + items.map(d => `
+      <div class="destination">
+        <label>
+          <input type="checkbox"
+                 class="destination-check"
+                 value="${safe(d.id)}">
+          <span>${safe(d.destination_name)}</span>
+        </label>
+        ${d.description ? `<small>${safe(d.description)}</small>` : ""}
+      </div>
+    `).join("");
+  }).join("");
+
+  document.querySelectorAll(".destination-check").forEach(input => {
+    input.addEventListener("change",renderVisitOrder);
+  });
+}
+
+function renderVisitOrder() {
+  const selected = [
+    ...document.querySelectorAll(".destination-check:checked")
+  ].map(input => destinations.find(d => d.id === input.value))
+   .filter(Boolean);
+
+  $("orderPanel").hidden = selected.length === 0;
+
+  $("orderList").innerHTML = selected.map((d,index) => `
+    <div class="order-row">
+      <span>
+        ${safe(d.destination_name)}
+        <small>(${safe(d.region)})</small>
+      </span>
+
+      <label style="font-size:12px">
+        Visit order
+        <input class="visit-order"
+               type="number"
+               min="1"
+               max="${selected.length}"
+               value="${index+1}"
+               data-id="${safe(d.id)}"
+               required>
+      </label>
+    </div>
+  `).join("");
+}
+
+function createTravellerFields() {
+  const count = Math.min(
+    20,
+    Math.max(1,Number($("travellerCount").value || 1))
+  );
+
+  $("travellerCount").value = count;
+
+  $("travellerFields").innerHTML = Array.from(
+    {length:count},
+    (_,i) => `
+      <div class="traveller">
+        <h3>Traveller ${i+1}</h3>
+
+        <div class="grid">
+          <div class="field">
+            <label>Full Name</label>
+            <input class="traveller-name"
+                   type="text"
+                   required
+                   placeholder="Traveller full name">
+          </div>
+
+          <div class="field">
+            <label>Age (optional)</label>
+            <input class="traveller-age"
+                   type="number"
+                   min="0"
+                   max="120"
+                   placeholder="Age">
+          </div>
+
+          <div class="field">
+            <label>Phone (optional)</label>
+            <input class="traveller-phone"
+                   type="tel"
+                   placeholder="Phone number">
+          </div>
+        </div>
+      </div>
+    `
+  ).join("");
+}
+
+function getOrderedDestinations() {
+  const selected = [
+    ...document.querySelectorAll(".visit-order")
+  ].map(input => ({
+    destination_id:input.dataset.id,
+    visit_order:Number(input.value)
+  }));
+
+  if (!selected.length) {
+    throw new Error("Please select at least one Ladakh destination.");
+  }
+
+  const orders = selected.map(d => d.visit_order);
+
+  if (selected.some(d =>
+    !Number.isInteger(d.visit_order) ||
+    d.visit_order < 1 ||
+    d.visit_order > selected.length
+  )) {
+    throw new Error(
+      "Visit order must use numbers from 1 to " + selected.length + "."
+    );
+  }
+
+  if (new Set(orders).size !== orders.length) {
+    throw new Error(
+      "Each selected destination must have a different visit order."
+    );
+  }
+
+  return selected.sort((a,b) => a.visit_order - b.visit_order);
+}
+
+async function submitCustomTour(event) {
+  event.preventDefault();
+
+  if (!currentUser || !customPackage) return;
+
+  let orderedDestinations;
+
+  try {
+    orderedDestinations = getOrderedDestinations();
+  } catch(error) {
+    showMessage(error.message,"error");
+    return;
+  }
+
+  const names = [...document.querySelectorAll(".traveller-name")];
+  const ages = [...document.querySelectorAll(".traveller-age")];
+  const phones = [...document.querySelectorAll(".traveller-phone")];
+
+  const travellers = names.map((input,i) => ({
+    full_name:input.value.trim(),
+    age:ages[i].value ? Number(ages[i].value) : null,
+    phone:phones[i].value.trim() || null
+  }));
+
+  if (travellers.some(t => !t.full_name)) {
+    showMessage(
+      "Please enter the full name of every traveller.",
+      "error"
+    );
+    return;
+  }
+
+  const btn = $("submitBtn");
+  btn.disabled = true;
+  btn.textContent = "Submitting request…";
+
+  try {
+    const {data,error} = await db.rpc(
+      "create_pending_booking",
+      {
+        p_package_id:customPackage.id,
+        p_travel_date:$("travelDate").value,
+        p_traveller_count:travellers.length,
+        p_contact_name:$("contactName").value.trim(),
+        p_contact_email:$("contactEmail").value.trim(),
+        p_contact_phone:$("contactPhone").value.trim(),
+        p_travellers:travellers,
+        p_duration_days:Number($("durationDays").value),
+        p_accommodation_type:$("accommodation").value,
+        p_transport_type:$("transport").value,
+        p_special_requirements:
+          $("specialRequirements").value.trim() || null,
+        p_destinations:orderedDestinations
+      }
+    );
+
+    if (error) throw error;
+
+    const result = data?.[0];
+
+    if (!result?.booking_reference) {
+      throw new Error(
+        "The booking reference was not returned. Please check Pending Bookings in your dashboard."
+      );
+    }
+
+    showMessage(
+      "Your custom tour request has been submitted. Reference: " +
+      result.booking_reference +
+      ". Redirecting to your dashboard…",
+      "success"
+    );
+
+    setTimeout(() => {
+      window.location.replace("dashboard.html#pending");
+    },1200);
+
+  } catch(error) {
+    console.error("Custom tour submission error:",error);
+
+    showMessage(
+      error.message || "Could not submit your custom tour request.",
+      "error"
+    );
+
+    btn.disabled = false;
+    btn.textContent = "Submit Custom Tour Request";
+  }
+}
+
+$("travellerCount").addEventListener(
+  "input",
+  createTravellerFields
+);
+
+$("customTourForm").addEventListener(
+  "submit",
+  submitCustomTour
+);
+
+(async function init() {
+  setMinimumDate();
+  createTravellerFields();
+
+  try {
+    const ok = await loadUserAndPackage();
+    if (!ok) return;
+
+    await loadDestinations();
+
+  } catch(error) {
+    console.error(error);
+
+    showMessage(
+      error.message || "Could not load the custom tour form.",
+      "error"
+    );
+
+    $("submitBtn").disabled = true;
+  }
+})();
+
+</script>
+
+</body>
+
+</html>

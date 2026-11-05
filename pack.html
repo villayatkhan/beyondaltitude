@@ -418,7 +418,6 @@ footer strong {
     }
 }
 </style>
-   
 </head>
 
 <body>
@@ -873,8 +872,6 @@ footer strong {
             <button type="reset" class="secondary">
                 Reset Form
             </button>
-            <button  type="button" class="primary"  onclick="g1()"> main menu
-            </button>
         </div>
 
         <p class="description" style="margin-top:15px">
@@ -972,7 +969,6 @@ async function copyRequest() {
     try {
         await navigator.clipboard.writeText(request);
         alert("Thank you for your interest! Our team will contact you soon.");
-        window.location.href="pack.html";
     } catch (error) {
         const area = document.createElement("textarea");
         area.value = request;
@@ -984,7 +980,6 @@ async function copyRequest() {
 
         if (copied) {
             alert("Thank you for your interest! Our team will contact you soon.");
-               window.location.href="pack.html";
         } else {
             prompt("Copy your tour request:", request);
         }
@@ -996,13 +991,7 @@ form.addEventListener("change", updateSummary);
 form.addEventListener("reset", () => setTimeout(updateSummary, 0));
 
 updateSummary();
-    </script>
-
-     <script>
-        function g1(){
-            window.location.href="index.html";
-        }
-    </script>
+</script>
 
 </body>
 </html>

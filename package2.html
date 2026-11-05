@@ -1,0 +1,920 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beyond Altitude | Custom Tours</title>
+
+<style>
+:root {
+    --dark: #17352f;
+    --green: #397565;
+    --gold: #d8b475;
+    --bg: #f5f5ef;
+    --white: #fff;
+    --text: #26342f;
+    --muted: #707b75;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+header {
+    background: linear-gradient(135deg, #17352f, #315b4e);
+    color: white;
+    padding: 65px 20px;
+    text-align: center;
+}
+
+.brand {
+    color: var(--gold);
+    letter-spacing: 5px;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+header h1 {
+    font-size: clamp(35px, 6vw, 56px);
+    line-height: 1.15;
+}
+
+header p {
+    max-width: 650px;
+    margin: 18px auto 0;
+    color: #e5eee9;
+}
+
+.container {
+    width: min(1100px, 92%);
+    margin: auto;
+}
+
+section {
+    padding: 45px 0;
+}
+
+.heading {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.heading h2 {
+    color: var(--dark);
+    font-size: 29px;
+}
+
+.heading p {
+    color: var(--muted);
+    margin-top: 6px;
+}
+
+.packages {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.package {
+    background: white;
+    border: 2px solid #e2e6df;
+    border-radius: 13px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.package:has(input:checked) {
+    border-color: var(--green);
+    box-shadow: 0 5px 20px #17352f12;
+}
+
+.package-top {
+    background: var(--dark);
+    color: white;
+    padding: 22px;
+}
+
+.package-top small {
+    color: var(--gold);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.package-top h3 {
+    margin: 8px 0;
+    font-size: 23px;
+}
+
+.package-top p {
+    font-size: 13px;
+    color: #e5eee9;
+}
+
+.package-content {
+    padding: 20px;
+    flex: 1;
+}
+
+.package-content ul {
+    list-style: none;
+    margin-bottom: 18px;
+    font-size: 14px;
+}
+
+.package-content li {
+    margin: 7px 0;
+}
+
+.package-content li::before {
+    content: "✓ ";
+    color: var(--green);
+    font-weight: bold;
+}
+
+.choose {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--green);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: var(--green);
+}
+
+.form-card {
+    background: white;
+    padding: clamp(18px, 4vw, 35px);
+    border-radius: 14px;
+    border: 1px solid #e1e5de;
+}
+
+.form-section {
+    margin-bottom: 30px;
+}
+
+.form-section h3 {
+    color: var(--dark);
+    margin-bottom: 6px;
+    font-size: 20px;
+}
+
+.description {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd4cd;
+    border-radius: 7px;
+    background: white;
+    color: var(--text);
+    font: inherit;
+    font-size: 14px;
+}
+
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: 2px solid #a4c5b7;
+    border-color: var(--green);
+}
+
+.option-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #f8f9f5;
+    border: 1px solid #e0e5dd;
+    border-radius: 9px;
+    padding: 15px;
+    cursor: pointer;
+    font-weight: normal;
+    transition: .2s;
+}
+
+.option:has(input:checked) {
+    background: #edf5ef;
+    border-color: var(--green);
+}
+
+.option input {
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.option strong {
+    display: block;
+    font-size: 14px;
+}
+
+.option span {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.bonus-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.bonus-option {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: #f8f9f5;
+    border: 1px solid #e0e5dd;
+    border-radius: 9px;
+    padding: 14px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.bonus-option:has(input:checked) {
+    background: #edf5ef;
+    border-color: var(--green);
+}
+
+.bonus-option input {
+    margin-top: 5px;
+}
+
+.notice {
+    background: #fff8e9;
+    border: 1px solid #efdfb8;
+    color: #6c542b;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-top: 15px;
+}
+
+.summary {
+    background: #edf4ed;
+    border-left: 4px solid var(--green);
+    padding: 20px;
+    border-radius: 8px;
+    margin: 25px 0;
+}
+
+.summary h3 {
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.summary p {
+    margin: 5px 0;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 13px 20px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.primary {
+    background: var(--green);
+    color: white;
+}
+
+.secondary {
+    background: #e8ede7;
+    color: var(--dark);
+}
+
+footer {
+    background: var(--dark);
+    color: white;
+    text-align: center;
+    padding: 25px 15px;
+    font-size: 13px;
+}
+
+footer strong {
+    color: var(--gold);
+    letter-spacing: 3px;
+}
+
+@media (max-width: 800px) {
+    .packages {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 550px) {
+    .grid,
+    .option-list,
+    .bonus-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .buttons button {
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="brand">BEYOND ALTITUDE</div>
+    <h1>Your Journey,<br>Your Way.</h1>
+    <p>
+        Discover the beauty of Ladakh with a journey designed
+        around your interests, travel style and available time.
+    </p>
+</header>
+
+<main class="container">
+
+<section>
+    <div class="heading">
+        <h2>Choose Your Region</h2>
+        <p>Select a package to begin planning your journey.</p>
+    </div>
+
+    <div class="packages">
+
+        <article class="package">
+            <div class="package-top">
+                <small>Package 01</small>
+                <h3>Leh Explorer</h3>
+                <p>Heritage, monasteries, lakes and mountain scenery.</p>
+            </div>
+            <div class="package-content">
+                <ul>
+                    <li>Leh town and historical attractions</li>
+                    <li>Monasteries and cultural experiences</li>
+                    <li>Optional Nubra Valley and Pangong Lake</li>
+                    <li>Kargil extension available</li>
+                </ul>
+                <label class="choose">
+                    <input type="radio" name="package" value="Leh Explorer" checked>
+                    Choose Leh
+                </label>
+            </div>
+        </article>
+
+        <article class="package">
+            <div class="package-top">
+                <small>Package 02</small>
+                <h3>Kargil Explorer</h3>
+                <p>War history, local heritage and dramatic valleys.</p>
+            </div>
+            <div class="package-content">
+                <ul>
+                    <li>Kargil War Memorial and Dras</li>
+                    <li>Mulbekh and local heritage</li>
+                    <li>Optional Suru Valley</li>
+                    <li>Zanskar extension available</li>
+                </ul>
+                <label class="choose">
+                    <input type="radio" name="package" value="Kargil Explorer">
+                    Choose Kargil
+                </label>
+            </div>
+        </article>
+
+        <article class="package">
+            <div class="package-top">
+                <small>Package 03</small>
+                <h3>Grand Leh + Kargil</h3>
+                <p>A combined journey through both regions.</p>
+            </div>
+            <div class="package-content">
+                <ul>
+                    <li>Highlights of Leh</li>
+                    <li>Kargil and Dras heritage</li>
+                    <li>Scenic routes and cultural experiences</li>
+                    <li>Flexible multi-day itinerary</li>
+                </ul>
+                <label class="choose">
+                    <input type="radio" name="package" value="Grand Leh + Kargil">
+                    Choose Both
+                </label>
+            </div>
+        </article>
+
+    </div>
+</section>
+
+<section>
+    <div class="heading">
+        <h2>Customise Your Journey</h2>
+        <p>Tell us a little about yourself. We will help plan the rest.</p>
+    </div>
+
+    <form class="form-card" id="tourForm">
+
+        <div class="form-section">
+            <h3>01. Traveller Details</h3>
+            <p class="description">A few details to help us plan your trip.</p>
+
+            <div class="grid">
+                <div class="field">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" required placeholder="Your name">
+                </div>
+
+                <div class="field">
+                    <label for="phone">Contact Number *</label>
+                    <input type="tel" id="phone" required placeholder="Your phone number">
+                </div>
+
+                <div class="field">
+                    <label for="email">Email (optional)</label>
+                    <input type="email" id="email" placeholder="you@example.com">
+                </div>
+
+                <div class="field">
+                    <label for="traveller">Travelling As</label>
+                    <select id="traveller">
+                        <option>Solo Traveller</option>
+                        <option>Couple</option>
+                        <option>Friends</option>
+                        <option>Family</option>
+                        <option>Student Group</option>
+                        <option>Historical Tour Group</option>
+                        <option>Adventure Group</option>
+                        <option>Other Group</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="people">Number of Travellers</label>
+                    <input type="number" id="people" min="1" max="100" value="2">
+                </div>
+
+                <div class="field">
+                    <label for="duration">Available Duration</label>
+                    <select id="duration">
+                        <option>1–3 days</option>
+                        <option selected>5–7 days</option>
+                        <option>8–10 days</option>
+                        <option>11+ days</option>
+                        <option>Flexible</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="start">Starting Point</label>
+                    <select id="start">
+                        <option>Leh</option>
+                        <option>Kargil</option>
+                        <option>Dras</option>
+                        <option>Not decided yet</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="date">Preferred Start Date</label>
+                    <input type="date" id="date">
+                </div>
+
+                <div class="field">
+                    <label for="budget">Budget per Person</label>
+                    <select id="budget">
+                        <option>Budget-friendly</option>
+                        <option selected>Moderate</option>
+                        <option>Comfort</option>
+                        <option>Premium</option>
+                        <option>Need guidance</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="transport">Transport Preference</label>
+                    <select id="transport">
+                        <option>Shared transport</option>
+                        <option>Private vehicle</option>
+                        <option>Public transport where practical</option>
+                        <option>Need guidance</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>02. What Do You Enjoy?</h3>
+            <p class="description">
+                Choose the experiences you like. You do not need to
+                know the names of individual destinations.
+            </p>
+
+            <div class="option-list">
+                <label class="option">
+                    <input type="checkbox" name="interest" value="History and Heritage">
+                    <div>
+                        <strong>History & Heritage</strong>
+                        <span>Palaces, museums, historical places and monuments.</span>
+                    </div>
+                </label>
+
+                <label class="option">
+                    <input type="checkbox" name="interest" value="Culture and Monasteries">
+                    <div>
+                        <strong>Culture & Monasteries</strong>
+                        <span>Local traditions, monasteries, food and village life.</span>
+                    </div>
+                </label>
+
+                <label class="option">
+                    <input type="checkbox" name="interest" value="Nature and Landscapes">
+                    <div>
+                        <strong>Nature & Landscapes</strong>
+                        <span>Mountains, lakes, valleys and scenic viewpoints.</span>
+                    </div>
+                </label>
+
+                <label class="option">
+                    <input type="checkbox" name="interest" value="Adventure and Photography">
+                    <div>
+                        <strong>Adventure & Photography</strong>
+                        <span>Outdoor experiences, scenic drives and photography.</span>
+                    </div>
+                </label>
+
+                <label class="option">
+                    <input type="checkbox" name="interest" value="Local Food and Village Life">
+                    <div>
+                        <strong>Local Food & Village Life</strong>
+                        <span>Discover local cuisine, communities and handicrafts.</span>
+                    </div>
+                </label>
+
+                <label class="option">
+                    <input type="checkbox" name="interest" value="Balanced Experience">
+                    <div>
+                        <strong>A Bit of Everything</strong>
+                        <span>A balanced itinerary with different experiences.</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>03. What Travel Pace Do You Prefer?</h3>
+
+            <div class="option-list">
+                <label class="option">
+                    <input type="radio" name="pace" value="Relaxed" checked>
+                    <div>
+                        <strong>Relaxed</strong>
+                        <span>Fewer stops, more time at each place.</span>
+                    </div>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="pace" value="Balanced">
+                    <div>
+                        <strong>Balanced</strong>
+                        <span>Major attractions with comfortable travel.</span>
+                    </div>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="pace" value="Explore More">
+                    <div>
+                        <strong>Explore More</strong>
+                        <span>Cover as many suitable attractions as possible.</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>04. Choose Your Tour Style</h3>
+
+            <div class="option-list">
+                <label class="option">
+                    <input type="radio" name="style" value="Student Heritage Trail">
+                    <div>
+                        <strong>Student Heritage Trail</strong>
+                        <span>Educational and historical experiences.</span>
+                    </div>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="style" value="Culture and Classics">
+                    <div>
+                        <strong>Culture & Classics</strong>
+                        <span>Popular attractions and local culture.</span>
+                    </div>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="style" value="Curious Explorer" checked>
+                    <div>
+                        <strong>Curious Explorer</strong>
+                        <span>A mix of famous places and hidden gems.</span>
+                    </div>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="style" value="Fully Customised">
+                    <div>
+                        <strong>Fully Customised</strong>
+                        <span>Let us create an itinerary around your preferences.</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>05. Would You Like Something Extra?</h3>
+            <p class="description">
+                Not sure what to add? Choose an experience category
+                or let us recommend something suitable.
+            </p>
+
+            <div class="bonus-grid">
+                <label class="bonus-option">
+                    <input type="checkbox" name="bonus" value="Recommend the best extras">
+                    <span>
+                        <strong>Surprise Me</strong><br>
+                        Recommend suitable experiences for my trip.
+                    </span>
+                </label>
+
+                <label class="bonus-option">
+                    <input type="checkbox" name="bonus" value="Local cultural experience">
+                    <span>
+                        <strong>Local Culture</strong><br>
+                        Food, village visits or local handicrafts.
+                    </span>
+                </label>
+
+                <label class="bonus-option">
+                    <input type="checkbox" name="bonus" value="Scenic experience">
+                    <span>
+                        <strong>Scenic Experience</strong><br>
+                        A beautiful viewpoint, lake or photography stop.
+                    </span>
+                </label>
+
+                <label class="bonus-option">
+                    <input type="checkbox" name="bonus" value="Historical experience">
+                    <span>
+                        <strong>Historical Experience</strong><br>
+                        A museum, monument or historical attraction.
+                    </span>
+                </label>
+
+                <label class="bonus-option">
+                    <input type="checkbox" name="bonus" value="No extras">
+                    <span>
+                        <strong>Keep It Simple</strong><br>
+                        No additional experiences required.
+                    </span>
+                </label>
+            </div>
+
+            <div class="notice">
+                Extra experiences depend on route, availability .
+                Any complimentary inclusion will be confirmed before booking.
+                Transport, tickets, permits, meals and other charges may apply.
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>06. Anything Else? (Optional)</h3>
+            <p class="description">
+                Already have a particular place in mind? Mention it here.
+                Otherwise, leave this blank and we will suggest destinations.
+            </p>
+
+            <div class="grid">
+                <div class="field full">
+                    <label for="specific">Specific Place or Request</label>
+                    <textarea id="specific"
+                        placeholder="Optional — tell us anything you would especially like to include."></textarea>
+                </div>
+
+                <div class="field">
+                    <label for="stay">Accommodation Preference</label>
+                    <select id="stay">
+                        <option>Not required</option>
+                        <option>Budget guesthouse</option>
+                        <option>Hotel</option>
+                        <option>Homestay</option>
+                        <option>Premium accommodation</option>
+                        <option>Need guidance</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary">
+            <h3>Your Journey Summary</h3>
+            <p><strong>Package:</strong> <span id="sumPackage">Leh Explorer</span></p>
+            <p><strong>Travellers:</strong> <span id="sumPeople">2</span></p>
+            <p><strong>Duration:</strong> <span id="sumDuration">5–7 days</span></p>
+            <p><strong>Interests:</strong> <span id="sumInterest">Not selected</span></p>
+            <p><strong>Travel pace:</strong> <span id="sumPace">Relaxed</span></p>
+            <p><strong>Tour style:</strong> <span id="sumStyle">Curious Explorer</span></p>
+            <p><strong>Extra experiences:</strong> <span id="sumBonus">None selected</span></p>
+        </div>
+
+        <div class="buttons">
+            <button type="button" class="primary" onclick="copyRequest()">
+              submit
+            </button>
+            <button type="reset" class="secondary">
+                Reset Form
+            </button>
+        </div>
+
+        <p class="description" style="margin-top:15px">
+Please enter a valid contact number. Our Beyond Altitude team will use this number to contact you regarding your tour enquiry, itinerary and booking details.
+        </p>
+
+    </form>
+</section>
+
+</main>
+
+<footer>
+    <strong>BEYOND ALTITUDE</strong>
+    <p>Explore More. Experience Deeper. Travel Your Way.</p>
+</footer>
+
+<script>
+const form = document.getElementById("tourForm");
+
+function checkedValues(name) {
+    return [...document.querySelectorAll(
+        'input[name="' + name + '"]:checked'
+    )].map(item => item.value);
+}
+
+function getValue(id) {
+    return document.getElementById(id).value || "Not specified";
+}
+
+function updateSummary() {
+    const selectedPackage =
+        document.querySelector('input[name="package"]:checked');
+
+    document.getElementById("sumPackage").textContent =
+        selectedPackage ? selectedPackage.value : "Not selected";
+
+    document.getElementById("sumPeople").textContent =
+        getValue("people");
+
+    document.getElementById("sumDuration").textContent =
+        getValue("duration");
+
+    const interests = checkedValues("interest");
+    document.getElementById("sumInterest").textContent =
+        interests.length ? interests.join(", ") : "Not selected";
+
+    const pace = document.querySelector('input[name="pace"]:checked');
+    document.getElementById("sumPace").textContent =
+        pace ? pace.value : "Not selected";
+
+    const style = document.querySelector('input[name="style"]:checked');
+    document.getElementById("sumStyle").textContent =
+        style ? style.value : "Not selected";
+
+    const bonuses = checkedValues("bonus");
+    document.getElementById("sumBonus").textContent =
+        bonuses.length ? bonuses.join(", ") : "None selected";
+}
+
+function buildRequest() {
+    return [
+        "BEYOND ALTITUDE — CUSTOM TOUR REQUEST",
+        "--------------------------------------",
+        "Name: " + getValue("name"),
+        "Phone: " + getValue("phone"),
+        "Email: " + getValue("email"),
+        "Package: " + getValueForRadio("package"),
+        "Travelling as: " + getValue("traveller"),
+        "Travellers: " + getValue("people"),
+        "Duration: " + getValue("duration"),
+        "Starting point: " + getValue("start"),
+        "Preferred date: " + getValue("date"),
+        "Budget: " + getValue("budget"),
+        "Transport: " + getValue("transport"),
+        "Accommodation: " + getValue("stay"),
+        "Interests: " + (checkedValues("interest").join(", ") || "Not specified"),
+        "Travel pace: " + getValueForRadio("pace"),
+        "Tour style: " + getValueForRadio("style"),
+        "Extra experiences: " + (checkedValues("bonus").join(", ") || "None"),
+        "Specific request: " + (getValue("specific") || "None"),
+        "",
+        "Please suggest a suitable itinerary and confirm the final cost."
+    ].join("\n");
+}
+
+function getValueForRadio(name) {
+    const input = document.querySelector('input[name="' + name + '"]:checked');
+    return input ? input.value : "Not selected";
+}
+
+async function copyRequest() {
+    if (!form.reportValidity()) return;
+
+    const request = buildRequest();
+
+    try {
+        await navigator.clipboard.writeText(request);
+        alert("thank you for showing interest! our team will contact you soon ");
+    } catch (error) {
+        const area = document.createElement("textarea");
+        area.value = request;
+        document.body.appendChild(area);
+        area.select();
+
+        const copied = document.execCommand("copy");
+        area.remove();
+
+        if (copied) {
+            alert("thank you for showing interest! our team will contact you soon .");
+        } else {
+            prompt("Copy your tour request:", request);
+        }
+    }
+}
+
+form.addEventListener("input", updateSummary);
+form.addEventListener("change", updateSummary);
+
+form.addEventListener("reset", () => {
+    setTimeout(updateSummary, 0);
+});
+
+updateSummary();
+</script>
+
+</body>
+</html>

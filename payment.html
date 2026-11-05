@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Status | Beyond Altitude</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7f6;
+            display: grid;
+            place-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .payment-card {
+            background: white;
+            padding: 35px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 420px;
+            width: 85%;
+            box-shadow: 0 5px 25px #0001;
+        }
+
+        h2 { color: #173f38; }
+
+        #status {
+            margin: 20px 0;
+            color: #444;
+        }
+
+        button {
+            padding: 12px 22px;
+            border: none;
+            border-radius: 8px;
+            background: #174f43;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="payment-card">
+
+    <h2>Beyond Altitude</h2>
+
+    <h3>Payment Verification</h3>
+
+    <p id="status">Checking your payment...</p>
+
+    <p id="bookingId"></p>
+
+    <button id="retryButton" onclick="verifyPayment()"
+            style="display:none">
+        Check Payment Again
+    </button>
+
+    <p>
+        <a href="index.html">Return to Home</a>
+    </p>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const supabaseClient = window.supabase.createClient(
+    "YOUR_SUPABASE_PROJECT_URL",
+    "YOUR_SUPABASE_PUBLISHABLE_KEY"
+);
+
+const params = new URLSearchParams(window.location.search);
+
+const merchantOrderId = params.get("merchantOrderId");
+
+async function verifyPayment() {
+
+    const status = document.getElementById("status");
+    const booking = document.getElementById("bookingId");
+    const retry = document.getElementById("retryButton");
+
+    retry.style.display = "none";
+    status.textContent = "Verifying with PhonePe...";
+
+    if (!merchantOrderId) {
+        status.textContent = "Invalid payment reference.";
+        return;
+    }
+
+    const { data, error } =
+        await supabaseClient.functions.invoke(
+            "verify-phonepe-payment",
+            {
+                body: { merchantOrderId }
+            }
+        );
+
+    if (error || !data?.success) {
+        status.textContent =
+            data?.error || "Unable to verify payment. Please try again.";
+
+        retry.style.display = "inline-block";
+        return;
+    }
+
+    booking.textContent = "Booking ID: " + data.bookingId;
+
+    if (data.transactionState === "COMPLETED") {
+
+        if (data.paymentStatus === "paid") {
+            status.textContent =
+                "Payment successful! Your booking is fully paid.";
+        } else {
+            status.textContent =
+                "Advance payment successful! Your booking is confirmed. Balance: ₹" +
+                (data.balancePaise / 100).toFixed(2);
+        }
+
+    } else if (
+        data.transactionState === "FAILED" ||
+        data.transactionState === "EXPIRED"
+    ) {
+
+        status.textContent =
+            "Payment was not completed. Your booking is awaiting payment.";
+
+        retry.style.display = "inline-block";
+
+    } else {
+
+        status.textContent =
+            "Payment is still pending. Please check again shortly.";
+
+        retry.style.display = "inline-block";
+    }
+}
+
+verifyPayment();
+</script>
+
+</body>
+</html>

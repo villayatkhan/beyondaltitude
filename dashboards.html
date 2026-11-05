@@ -1,0 +1,1066 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#173e35">
+<title>Customer Dashboard | Beyond Altitude</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root {
+  --green:#173e35;
+  --green2:#527466;
+  --gold:#c69b58;
+  --bg:#f5f6f4;
+  --light:#eef3ef;
+  --ink:#26332f;
+  --muted:#718078;
+  --line:#e7ece8;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:var(--bg);color:var(--ink)}
+.layout{display:flex;min-height:100vh}
+.sidebar{
+  width:245px;background:var(--green);color:white;
+  padding:28px 20px;position:fixed;inset:0 auto 0 0;
+  height:100vh;z-index:5
+}
+.logo{color:#e5bd79;font-size:22px;font-weight:bold;letter-spacing:1px}
+.logo-sub{font-size:10px;letter-spacing:3px;color:#c8d4cf;margin:8px 0 38px}
+.nav a{
+  display:block;padding:13px;margin:7px 0;color:#dce7e1;
+  text-decoration:none;border-radius:8px;font-size:14px
+}
+.nav a:hover,.nav a.active{background:#31594d;color:white}
+.logout{
+  position:absolute;bottom:28px;left:20px;width:205px;padding:12px;
+  border:1px solid #769086;background:transparent;color:white;
+  border-radius:8px;cursor:pointer
+}
+.main{margin-left:245px;width:calc(100% - 245px);padding:30px 35px;max-width:1600px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;gap:15px}
+.topbar h2{font-size:23px}
+.customer{display:flex;align-items:center;gap:10px;font-size:13px}
+.avatar{
+  width:39px;height:39px;display:grid;place-items:center;
+  border-radius:50%;background:var(--green);color:white;font-weight:bold
+}
+.welcome{
+  background:linear-gradient(110deg,var(--green),var(--green2));
+  color:white;padding:30px;border-radius:14px;margin-bottom:22px
+}
+.welcome h1{font-size:27px;margin-bottom:10px}
+.welcome p{color:#e0e9e3;font-size:14px}
+.customer-id{margin-top:18px;color:#e9c88f;font-size:13px;font-weight:bold}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}
+.stat,.card{background:white;border:1px solid var(--line);border-radius:12px}
+.stat{padding:21px}
+.stat small{color:#7c8982}
+.stat h2{margin-top:11px;font-size:23px;color:var(--green)}
+.content{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
+.card{padding:23px;margin-bottom:20px;min-width:0}
+.card h3{font-size:17px;margin-bottom:18px;color:var(--ink)}
+.booking{background:var(--light);padding:18px;border-radius:10px;margin-bottom:13px}
+.booking h2{font-size:18px;color:var(--green);margin-bottom:10px}
+.booking p{font-size:13px;color:#66736d;margin:8px 0;overflow-wrap:anywhere}
+.status{
+  display:inline-block;background:#dcefe1;color:#246b40;
+  padding:7px 12px;border-radius:20px;font-size:12px;margin-top:9px
+}
+.status.pending{background:#fff2d9;color:#94651b}
+.status.cancelled{background:#fbe4e2;color:#a33b32}
+.details{
+  display:flex;justify-content:space-between;gap:12px;
+  padding:11px 0;border-bottom:1px solid #edf0ed;font-size:13px
+}
+.details span:first-child{color:var(--muted)}
+.details span:last-child{font-weight:bold;text-align:right;overflow-wrap:anywhere}
+.btn{
+  display:inline-block;background:var(--green);color:white;padding:11px 16px;
+  border:0;border-radius:7px;cursor:pointer;margin-top:15px;
+  text-decoration:none;font-size:13px
+}
+.btn:hover{background:#31594d}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.secondary{background:#e9eee9;color:var(--green)}
+.gold{color:#b48a4e}
+.empty{
+  padding:20px;background:#f7f9f7;border:1px dashed #cbd6ce;
+  border-radius:10px;color:#68776e;font-size:14px;line-height:1.6
+}
+.muted{color:var(--muted);font-size:13px;line-height:1.6}
+.message{display:none;padding:12px 15px;border-radius:8px;margin-bottom:18px;font-size:13px}
+.message.error{display:block;background:#fff0ee;color:#a33b32}
+.message.info{display:block;background:#edf4ef;color:#31594d}
+.message.success{display:block;background:#e5f4e8;color:#246b40}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:7px;color:#52635a}
+.field input,.field select,.field textarea{
+  width:100%;padding:12px;border:1px solid #d9e1da;
+  border-radius:7px;background:white;font-size:14px;color:var(--ink)
+}
+.field textarea{min-height:90px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:2px solid #b8cfc0;border-color:var(--green)
+}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.traveller-box{background:#f7f9f7;padding:15px;border-radius:9px;margin:12px 0}
+.traveller-box h4{font-size:14px;margin-bottom:12px;color:var(--green)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:11px 9px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:#718078;font-weight:600}
+.locked{
+  background:#f7f7f4;border:1px dashed #d6d9d2;
+  padding:18px;border-radius:10px;color:#66736d;font-size:13px;line-height:1.6
+}
+.section-title{margin:28px 0 14px;color:var(--green);font-size:19px}
+.quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.quick-actions a{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:9px;padding:18px 8px;border:1px solid #dce5de;
+  border-radius:9px;text-decoration:none;color:var(--green);
+  font-size:12px;font-weight:bold;text-align:center
+}
+.quick-actions a:hover{background:var(--light)}
+.quick-icon{font-size:23px}
+.trip-card{
+  display:grid;grid-template-columns:42% 1fr;gap:15px;align-items:center
+}
+.trip-image{
+  width:100%;height:160px;object-fit:cover;border-radius:9px;
+  background:#e5ece7
+}
+.hidden{display:none!important}
+#bookingFormSection{scroll-margin-top:20px}
+@media(max-width:1100px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .content{grid-template-columns:1fr}
+}
+@media(max-width:900px){
+  .sidebar{width:190px}
+  .main{margin-left:190px;width:calc(100% - 190px);padding:22px}
+}
+@media(max-width:600px){
+  .layout{display:block}
+  .sidebar{position:relative;width:100%;height:auto;padding:17px}
+  .logo-sub{margin-bottom:12px}
+  .nav{display:flex;overflow-x:auto;gap:5px}
+  .nav a{white-space:nowrap;padding:10px;font-size:12px}
+  .logout{position:static;width:auto;margin-top:12px}
+  .main{margin:0;width:100%;padding:17px}
+  .topbar h2{font-size:18px}
+  .welcome{padding:22px}
+  .welcome h1{font-size:22px}
+  .stats{grid-template-columns:1fr 1fr;gap:9px}
+  .stat{padding:14px}
+  .stat h2{font-size:19px}
+  .form-grid{grid-template-columns:1fr}
+  .trip-card{grid-template-columns:1fr}
+  .trip-image{height:190px}
+  .quick-actions{grid-template-columns:repeat(3,1fr)}
+}
+@media print{
+  .sidebar,.topbar,.btn,#bookingFormSection{display:none!important}
+  .main{margin:0;width:100%}
+}
+</style>
+</head>
+
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="logo">BEYOND ALTITUDE</div>
+  <div class="logo-sub">EXPLORE LADAKH</div>
+
+  <nav class="nav">
+    <a class="active" href="#overview">⌂ Dashboard</a>
+    <a href="#bookingFormSection">✈ New Booking</a>
+    <a href="#booking">▤ My Bookings</a>
+    <a href="#payment">₹ Pending Payments</a>
+    <a href="#itinerary">🗺 Itinerary</a>
+    <a href="#profile">♙ My Profile</a>
+  </nav>
+
+  <button class="logout" id="logoutBtn">↪ Logout</button>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+  <h2>Customer Dashboard</h2>
+  <div class="customer">
+    <span id="welcomeShort">Loading account…</span>
+    <span class="avatar" id="avatar">B</span>
+  </div>
+</header>
+
+<div id="message" class="message"></div>
+
+<section class="welcome" id="overview">
+  <h1 id="welcomeName">Welcome!</h1>
+  <p>Your Ladakh journey, bookings and travel details in one place.</p>
+  <div class="customer-id" id="customerId">CUSTOMER ID: Not yet assigned</div>
+</section>
+
+<!-- DASHBOARD STATISTICS -->
+<section class="stats">
+  <div class="stat">
+    <small>Total Bookings</small>
+    <h2 id="totalCount">00</h2>
+  </div>
+  <div class="stat">
+    <small>Confirmed Bookings</small>
+    <h2 id="confirmedCount">00</h2>
+  </div>
+  <div class="stat">
+    <small>Pending Bookings</small>
+    <h2 id="pendingCount">00</h2>
+  </div>
+  <div class="stat">
+    <small>Pending Payment</small>
+    <h2 id="pendingAmount">₹0</h2>
+  </div>
+</section>
+
+<!-- BOOKING FORM -->
+<section class="card" id="bookingFormSection">
+  <h3>✈ Book a New Trip</h3>
+  <p class="muted" style="margin-bottom:18px">
+    Select your preferred package to continue with your Ladakh booking.
+  </p>
+
+  <!-- THIS IS THE ONLY FIELD VISIBLE INITIALLY -->
+  <div class="field">
+    <label for="packageSelect">Select Package *</label>
+    <select id="packageSelect" required>
+      <option value="">Loading packages...</option>
+    </select>
+  </div>
+
+  <div id="packageInfo" class="muted"></div>
+
+  <!-- REMAINING FIELDS ARE HIDDEN UNTIL A STANDARD PACKAGE IS SELECTED -->
+  <form id="bookingForm" class="hidden">
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="travelDate">Travel Date *</label>
+        <input type="date" id="travelDate" required>
+      </div>
+
+      <div class="field">
+        <label for="travellerCountInput">Number of Travellers *</label>
+        <input type="number" id="travellerCountInput"
+          min="1" max="20" value="1" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="accommodationType">Accommodation Preference *</label>
+      <select id="accommodationType" required>
+        <option value="">Choose accommodation</option>
+        <option value="Standard (Budget)">Standard (Budget)</option>
+        <option value="Deluxe">Deluxe</option>
+        <option value="Premium">Premium</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="transportType">Transport Preference *</label>
+      <select id="transportType" required>
+        <option value="">Choose transport</option>
+        <option value="Shared (Economy)">Shared (Economy)</option>
+        <option value="Private (SUV)">Private (SUV)</option>
+        <option value="Tempo Traveller">Tempo Traveller</option>
+      </select>
+    </div>
+
+    <h3 style="margin:22px 0 15px">Contact Information</h3>
+
+    <div class="field">
+      <label for="contactName">Booking Contact Name *</label>
+      <input type="text" id="contactName" placeholder="Full name" required>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="contactPhone">Contact Phone *</label>
+        <input type="tel" id="contactPhone"
+          placeholder="Mobile number" required>
+      </div>
+
+      <div class="field">
+        <label for="contactEmail">Contact Email *</label>
+        <input type="email" id="contactEmail"
+          placeholder="Email address" required>
+      </div>
+    </div>
+
+    <h3 style="margin:22px 0 15px">Traveller Information</h3>
+    <div id="travellerFields"></div>
+
+    <div class="field">
+      <label for="specialRequirements">
+        Additional Requirements (Optional)
+      </label>
+      <textarea id="specialRequirements"
+        placeholder="Special food, medical support, specific requirements, etc."></textarea>
+    </div>
+
+    <button class="btn" type="submit" id="createBookingBtn">
+      Request Booking
+    </button>
+  </form>
+</section>
+
+<!-- MY BOOKINGS -->
+<section class="card" id="booking">
+  <h3>▤ My Bookings</h3>
+  <div id="bookingList">
+    <div class="empty">Loading your bookings...</div>
+  </div>
+</section>
+
+<!-- QUICK ACTIONS -->
+<section class="card">
+  <h3>⚡ Quick Actions</h3>
+  <div class="quick-actions">
+    <a href="#bookingFormSection">
+      <span class="quick-icon">✈</span>
+      New Booking
+    </a>
+    <a href="#payment">
+      <span class="quick-icon">₹</span>
+      Payments
+    </a>
+    <a href="#itinerary">
+      <span class="quick-icon">▤</span>
+      Itinerary
+    </a>
+  </div>
+</section>
+
+<!-- UPCOMING TRIP -->
+<section class="card" id="upcomingTrip">
+  <h3>📍 Upcoming Trip</h3>
+  <div id="upcomingTripContent">
+    <div class="empty">Loading upcoming trip...</div>
+  </div>
+</section>
+
+<!-- PAYMENT DETAILS -->
+<section class="card" id="payment">
+  <h3>₹ Payment Summary</h3>
+
+  <div class="details">
+    <span>Pending amount</span>
+    <span id="paymentPendingAmount">₹0</span>
+  </div>
+  <div class="details">
+    <span>Verified amount paid</span>
+    <span class="gold" id="paidAmount">₹0</span>
+  </div>
+  <div class="details">
+    <span>Payment records</span>
+    <span id="paymentCount">0</span>
+  </div>
+
+  <div class="table-wrap" style="margin-top:12px">
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Amount</th><th>Status</th></tr>
+      </thead>
+      <tbody id="paymentRows">
+        <tr><td colspan="3" class="muted">No payment records yet.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ITINERARY -->
+<section class="card" id="itinerary">
+  <h3>🗺 Your Travel Itinerary</h3>
+  <div id="itineraryList">
+    <div class="locked">
+      Your itinerary will be available after your booking is confirmed
+      and payment is verified.
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE -->
+<section class="card" id="profile">
+  <h3>♙ My Profile</h3>
+  <div class="details"><span>Name</span><span id="profileName">—</span></div>
+  <div class="details"><span>Email</span><span id="profileEmail">—</span></div>
+  <div class="details"><span>Mobile</span><span id="profilePhone">Not provided</span></div>
+  <div class="details"><span>Customer ID</span><span id="profileCustomerId">Not assigned</span></div>
+</section>
+
+<section class="card">
+  <h3>Need Assistance?</h3>
+  <p class="muted">Our team is here to help you plan a memorable Ladakh experience.</p>
+  <a class="btn" href="https://wa.me/91XXXXXXXXXX"
+     target="_blank" rel="noopener">Contact on WhatsApp</a>
+</section>
+
+</main>
+</div>
+
+<script>
+/* =========================================
+   1. SUPABASE CONNECTION
+========================================= */
+
+const SUPABASE_URL =
+"https://gtiqyltzlcqzcpqnpsbb.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_fwzYRS8chR8nN3A2C7h08g_XS5zmDw3";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const $ = id => document.getElementById(id);
+
+let currentUser = null;
+let packages = [];
+let pendingRows = [];
+let permanentRows = [];
+let verifiedPayments = [];
+
+const VERIFIED = new Set([
+  "paid","success","successful","succeeded",
+  "completed","verified","captured"
+]);
+
+const money = value => new Intl.NumberFormat("en-IN", {
+  style:"currency",
+  currency:"INR",
+  maximumFractionDigits:2
+}).format(Number(value || 0));
+
+const safe = value => String(value ?? "").replace(/[&<>"']/g, ch => ({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#39;"
+}[ch]));
+
+function showMessage(message,type="info") {
+  $("message").className = "message " + type;
+  $("message").textContent = message;
+}
+
+function dateText(value) {
+  if (!value) return "Not specified";
+
+  const date = new Date(
+    value + (String(value).length === 10 ? "T00:00:00" : "")
+  );
+
+  return Number.isNaN(date.getTime()) ? safe(value) :
+    date.toLocaleDateString("en-IN", {
+      day:"numeric",month:"short",year:"numeric"
+    });
+}
+
+function setMinimumDate() {
+  const today = new Date();
+  const localDate = new Date(
+    today.getTime() - today.getTimezoneOffset()*60000
+  ).toISOString().split("T")[0];
+
+  $("travelDate").min = localDate;
+}
+
+/* =========================================
+   2. PACKAGE SELECTION
+========================================= */
+
+function isCustomPackage(pkg) {
+  const type = String(pkg.package_type || "").toLowerCase();
+  const name = String(pkg.package_name || "").toLowerCase();
+
+  return type.includes("custom") || name.includes("custom");
+}
+
+async function loadPackages() {
+  const {data,error} = await db
+    .from("packages")
+    .select("id,package_name,description,duration_days,price,package_type")
+    .eq("is_active",true)
+    .order("created_at",{ascending:true});
+
+  if (error) throw error;
+
+  packages = data || [];
+
+  const select = $("packageSelect");
+
+  if (!packages.length) {
+    select.innerHTML =
+      '<option value="">No active packages available</option>';
+    return;
+  }
+
+  select.innerHTML =
+    '<option value="">Choose your package</option>' +
+    packages.map(p => `
+      <option value="${safe(p.id)}">
+        ${safe(p.package_name)}
+      </option>
+    `).join("");
+}
+
+function showPackageInfo() {
+  const packageId = $("packageSelect").value;
+  const pkg = packages.find(p => p.id === packageId);
+
+  // Hide all booking fields when no package is selected.
+  $("bookingForm").classList.add("hidden");
+
+  if (!pkg) {
+    $("packageInfo").textContent = "";
+    return;
+  }
+
+  // Custom package redirects to the custom tour page.
+  if (isCustomPackage(pkg)) {
+    window.location.href =
+      "tour.html?package_id=" + encodeURIComponent(pkg.id);
+    return;
+  }
+
+  // Standard package: display package details and booking form.
+  $("packageInfo").innerHTML = `
+    <div class="details">
+      <span>Selected Package</span>
+      <strong>${safe(pkg.package_name)}</strong>
+    </div>
+    <div class="details">
+      <span>Package Price</span>
+      <strong>${money(pkg.price)}</strong>
+    </div>
+    <div class="details">
+      <span>Duration</span>
+      <strong>${safe(pkg.duration_days || "To be confirmed")} days</strong>
+    </div>
+    <p style="margin-top:10px">
+      ${safe(pkg.description || "")}
+    </p>
+  `;
+
+  $("bookingForm").classList.remove("hidden");
+  createTravellerFields();
+}
+
+/* =========================================
+   3. TRAVELLER FIELDS
+========================================= */
+
+function createTravellerFields() {
+  const count = Math.min(
+    20,
+    Math.max(1,Number($("travellerCountInput").value || 1))
+  );
+
+  $("travellerCountInput").value = count;
+
+  $("travellerFields").innerHTML =
+    Array.from({length:count},(_,i)=>`
+      <div class="traveller-box">
+        <h4>Traveller ${i+1}</h4>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>Full Name *</label>
+            <input class="traveller-name"
+              type="text" required placeholder="Traveller name">
+          </div>
+
+          <div class="field">
+            <label>Age</label>
+            <input class="traveller-age"
+              type="number" min="0" max="120" placeholder="Age">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Phone (optional)</label>
+          <input class="traveller-phone"
+            type="tel" placeholder="Phone number">
+        </div>
+      </div>
+    `).join("");
+}
+
+/* =========================================
+   4. CUSTOMER ACCOUNT
+========================================= */
+
+async function loadAccount() {
+  const {data,error} = await db.auth.getSession();
+
+  if (error || !data.session) {
+    window.location.replace("login.html");
+    return;
+  }
+
+  currentUser = data.session.user;
+
+  const meta = currentUser.user_metadata || {};
+
+  const fallbackName =
+    meta.full_name ||
+    meta.name ||
+    currentUser.email?.split("@")[0] ||
+    "Traveller";
+
+  $("welcomeShort").textContent = "Welcome, " + fallbackName;
+  $("welcomeName").textContent = "Welcome, " + fallbackName + "!";
+  $("avatar").textContent = fallbackName[0].toUpperCase();
+
+  $("profileName").textContent = fallbackName;
+  $("profileEmail").textContent = currentUser.email || "Not available";
+
+  $("contactName").value = fallbackName;
+  $("contactEmail").value = currentUser.email || "";
+
+  const {data:profile,error:profileError} = await db
+    .from("profiles")
+    .select("full_name,email,phone,customer_id")
+    .eq("id",currentUser.id)
+    .maybeSingle();
+
+  if (profileError) throw profileError;
+
+  if (profile) {
+    const name = profile.full_name || fallbackName;
+
+    $("welcomeShort").textContent = "Welcome, " + name;
+    $("welcomeName").textContent = "Welcome, " + name + "!";
+    $("avatar").textContent = name[0].toUpperCase();
+
+    $("profileName").textContent = name;
+    $("profileEmail").textContent =
+      profile.email || currentUser.email || "Not available";
+    $("profilePhone").textContent = profile.phone || "Not provided";
+
+    $("contactName").value = name;
+    $("contactPhone").value = profile.phone || "";
+
+    if (profile.customer_id !== null &&
+        profile.customer_id !== undefined) {
+      const id = "BA" + profile.customer_id;
+      $("customerId").textContent = "CUSTOMER ID: " + id;
+      $("profileCustomerId").textContent = id;
+    }
+  }
+}
+
+/* =========================================
+   5. CREATE STANDARD BOOKING
+========================================= */
+
+async function createBooking(event) {
+  event.preventDefault();
+
+  if (!currentUser) return;
+
+  const packageId = $("packageSelect").value;
+  const pkg = packages.find(p => p.id === packageId);
+
+  if (!pkg || isCustomPackage(pkg)) {
+    showMessage("Please select one of the standard packages.","error");
+    return;
+  }
+
+  if (!$("travelDate").value) {
+    showMessage("Please select your travel date.","error");
+    return;
+  }
+
+  if ($("travelDate").value < $("travelDate").min) {
+    showMessage("Travel date cannot be in the past.","error");
+    return;
+  }
+
+  if (!$("bookingForm").reportValidity()) return;
+
+  const travellerInputs =
+    [...document.querySelectorAll(".traveller-name")];
+
+  const ageInputs =
+    [...document.querySelectorAll(".traveller-age")];
+
+  const phoneInputs =
+    [...document.querySelectorAll(".traveller-phone")];
+
+  const travellerDetails = travellerInputs.map((input,i)=>({
+    full_name:input.value.trim(),
+    age:ageInputs[i].value || null,
+    phone:phoneInputs[i].value.trim() || null
+  }));
+
+  if (travellerDetails.some(t=>!t.full_name)) {
+    showMessage("Please enter every traveller's name.","error");
+    return;
+  }
+
+  const button = $("createBookingBtn");
+  button.disabled = true;
+  button.textContent = "Creating booking...";
+
+  try {
+    const {data,error} = await db.rpc("create_pending_booking",{
+      p_package_id:packageId,
+      p_travel_date:$("travelDate").value,
+      p_traveller_count:travellerDetails.length,
+      p_contact_name:$("contactName").value.trim(),
+      p_contact_email:$("contactEmail").value.trim(),
+      p_contact_phone:$("contactPhone").value.trim(),
+      p_travellers:travellerDetails,
+      p_duration_days:Number(pkg.duration_days || 0),
+      p_accommodation_type:$("accommodationType").value,
+      p_transport_type:$("transportType").value,
+      p_special_requirements:$("specialRequirements").value.trim(),
+      p_destinations:[]
+    });
+
+    if (error) throw error;
+
+    const result = Array.isArray(data) ? data[0] : data;
+
+    if (!result) {
+      throw new Error("Booking reference was not returned.");
+    }
+
+    showMessage(
+      "Your booking request has been submitted successfully. Reference: " +
+      (result.booking_reference || "Created") +
+      ". Your booking is awaiting payment.",
+      "success"
+    );
+
+    $("bookingForm").reset();
+    $("packageSelect").value = "";
+    $("packageInfo").textContent = "";
+    $("bookingForm").classList.add("hidden");
+
+    $("contactName").value =
+      currentUser.user_metadata?.full_name ||
+      currentUser.user_metadata?.name || "";
+    $("contactEmail").value = currentUser.email || "";
+
+    await refreshBookingData();
+
+  } catch(error) {
+    console.error("Booking error:",error);
+    showMessage(error.message || "Could not create booking.","error");
+  } finally {
+    button.disabled = false;
+    button.textContent = "Request Booking";
+  }
+}
+
+/* =========================================
+   6. PENDING BOOKINGS
+========================================= */
+
+async function loadPendingBookings() {
+  const {data,error} = await db
+    .from("pending_bookings")
+    .select("id,reference_code,package_id,travel_date,traveller_count,quoted_amount,payment_status,booking_status,created_at,converted_booking_id")
+    .eq("auth_user_id",currentUser.id)
+    .order("created_at",{ascending:false});
+
+  if (error) throw error;
+
+  pendingRows = data || [];
+
+  const packageIds = [
+    ...new Set(pendingRows.map(b=>b.package_id).filter(Boolean))
+  ];
+
+  let packageMap = new Map();
+
+  if (packageIds.length) {
+    const {data:packageRows,error:packageError} = await db
+      .from("packages")
+      .select("id,package_name")
+      .in("id",packageIds);
+
+    if (packageError) throw packageError;
+
+    packageMap = new Map(
+      (packageRows || []).map(p=>[p.id,p])
+    );
+  }
+
+  const openRows = pendingRows.filter(b=>!b.converted_booking_id);
+
+  $("pendingCount").textContent =
+    String(openRows.length).padStart(2,"0");
+
+  const pendingAmount = openRows.reduce(
+    (sum,b)=>sum+Number(b.quoted_amount || 0),0
+  );
+
+  $("pendingAmount").textContent = money(pendingAmount);
+  $("paymentPendingAmount").textContent = money(pendingAmount);
+
+  if (!pendingRows.length) {
+    $("bookingList").innerHTML =
+      '<div class="empty">You have no booking requests yet.</div>';
+    return;
+  }
+
+  const pendingHTML = pendingRows.map(b=>`
+    <article class="booking">
+      <h2>${safe(packageMap.get(b.package_id)?.package_name || "Tour Package")}</h2>
+      <p>Reference: <strong>${safe(b.reference_code)}</strong></p>
+      <p>Travel Date: ${dateText(b.travel_date)}</p>
+      <p>Travellers: ${safe(b.traveller_count)}</p>
+      <p>Amount: ${money(b.quoted_amount)}</p>
+      <span class="status pending">
+        ${safe(b.payment_status || "Payment Pending")}
+      </span>
+    </article>
+  `).join("");
+
+  $("bookingList").innerHTML = pendingHTML;
+}
+
+/* =========================================
+   7. PERMANENT BOOKINGS AND PAYMENTS
+========================================= */
+
+async function loadPermanentBookings() {
+  const {data:bookings,error} = await db
+    .from("bookings")
+    .select("id,booking_id,package_id,travel_date,total_amount,booking_status,created_at")
+    .eq("auth_user_id",currentUser.id)
+    .order("created_at",{ascending:false});
+
+  if (error) throw error;
+
+  permanentRows = bookings || [];
+
+  if (!permanentRows.length) {
+    $("confirmedCount").textContent = "00";
+    $("paidAmount").textContent = money(0);
+    $("paymentCount").textContent = "0";
+    $("paymentRows").innerHTML =
+      '<tr><td colspan="3" class="muted">No payment records yet.</td></tr>';
+    $("itineraryList").innerHTML =
+      '<div class="locked">Your itinerary will appear after booking confirmation and payment verification.</div>';
+    $("upcomingTripContent").innerHTML =
+      '<div class="empty">You have no confirmed upcoming trips yet.</div>';
+    return;
+  }
+
+  const bookingIds = permanentRows.map(b=>b.id);
+
+  const {data:payments,error:paymentError} = await db
+    .from("payments")
+    .select("id,booking_id,amount,payment_status,payment_date,payment_method")
+    .in("booking_id",bookingIds)
+    .order("payment_date",{ascending:false});
+
+  if (paymentError) throw paymentError;
+
+  verifiedPayments = (payments || []).filter(p=>
+    VERIFIED.has(String(p.payment_status || "").toLowerCase())
+  );
+
+  const verifiedIds = new Set(
+    verifiedPayments.map(p=>p.booking_id)
+  );
+
+  const confirmed = permanentRows.filter(b=>
+    verifiedIds.has(b.id)
+  );
+
+  $("confirmedCount").textContent =
+    String(confirmed.length).padStart(2,"0");
+
+  $("paidAmount").textContent = money(
+    verifiedPayments.reduce((sum,p)=>sum+Number(p.amount || 0),0)
+  );
+
+  $("paymentCount").textContent =
+    String(verifiedPayments.length);
+
+  $("paymentRows").innerHTML = verifiedPayments.length ?
+    verifiedPayments.map(p=>`
+      <tr>
+        <td>${dateText(p.payment_date)}</td>
+        <td>${money(p.amount)}</td>
+        <td>${safe(p.payment_status)}</td>
+      </tr>
+    `).join("") :
+    '<tr><td colspan="3" class="muted">No verified payments yet.</td></tr>';
+
+  const packageIds = [
+    ...new Set(permanentRows.map(b=>b.package_id).filter(Boolean))
+  ];
+
+  const {data:packageRows,error:packageError} = await db
+    .from("packages")
+    .select("id,package_name,description,duration_days")
+    .in("id",packageIds);
+
+  if (packageError) throw packageError;
+
+  const packageMap = new Map(
+    (packageRows || []).map(p=>[p.id,p])
+  );
+
+  const sorted = [...permanentRows].sort((a,b)=>
+    new Date(b.created_at)-new Date(a.created_at)
+  );
+
+  $("bookingList").innerHTML += sorted.map(b=>{
+    const paid = verifiedIds.has(b.id);
+
+    return `
+      <article class="booking">
+        <h2>${safe(packageMap.get(b.package_id)?.package_name || "Ladakh Tour")}</h2>
+        <p>Booking ID: <strong>BA${safe(b.booking_id)}</strong></p>
+        <p>Travel Date: ${dateText(b.travel_date)}</p>
+        <p>Amount: ${money(b.total_amount)}</p>
+        <span class="status ${paid ? "" : "pending"}">
+          ${paid ? "Confirmed / Payment Verified" : "Awaiting Payment Verification"}
+        </span>
+      </article>
+    `;
+  }).join("");
+
+  // Upcoming trip: earliest future confirmed booking.
+  const today = new Date().toISOString().split("T")[0];
+
+  const upcoming = confirmed
+    .filter(b=>b.travel_date && b.travel_date >= today)
+    .sort((a,b)=>new Date(a.travel_date)-new Date(b.travel_date))[0];
+
+  if (upcoming) {
+    const pkg = packageMap.get(upcoming.package_id);
+
+    $("upcomingTripContent").innerHTML = `
+      <div class="trip-card">
+        <div>
+          <strong>${safe(pkg?.package_name || "Ladakh Tour")}</strong>
+          <p class="muted" style="margin-top:10px">
+            Travel Date: ${dateText(upcoming.travel_date)}
+          </p>
+          <p class="muted">
+            Booking ID: BA${safe(upcoming.booking_id)}
+          </p>
+          <span class="status">Payment Verified</span>
+        </div>
+        <div>
+          <p class="muted">
+            ${safe(pkg?.description || "Your Ladakh trip is confirmed.")}
+          </p>
+          <p class="muted" style="margin-top:8px">
+            Duration: ${safe(pkg?.duration_days || "To be confirmed")} days
+          </p>
+        </div>
+      </div>
+    `;
+  } else {
+    $("upcomingTripContent").innerHTML =
+      '<div class="empty">No confirmed upcoming trip is available.</div>';
+  }
+
+  $("itineraryList").innerHTML = confirmed.length ?
+    confirmed.map(b=>{
+      const pkg = packageMap.get(b.package_id);
+      return `
+        <article class="booking">
+          <h2>${safe(pkg?.package_name || "Your Ladakh Tour")}</h2>
+          <p>Travel Date: ${dateText(b.travel_date)}</p>
+          <p>${safe(pkg?.description || "Detailed itinerary will be shared by Beyond Altitude.")}</p>
+          <p>Duration: ${safe(pkg?.duration_days || "To be confirmed")} days</p>
+          <span class="status">Payment Verified</span>
+        </article>
+      `;
+    }).join("") :
+    '<div class="locked">Your itinerary will be available after payment verification.</div>';
+}
+
+/* =========================================
+   8. REFRESH DASHBOARD
+========================================= */
+
+async function refreshBookingData() {
+  $("bookingList").innerHTML =
+    '<div class="empty">Loading bookings...</div>';
+
+  await loadPendingBookings();
+  await loadPermanentBookings();
+
+  const unconverted = pendingRows.filter(b=>!b.converted_booking_id).length;
+  const total = unconverted + permanentRows.length;
+
+  $("totalCount").textContent =
+    String(total).padStart(2,"0");
+}
+
+async function loadDashboard() {
+  try {
+    await loadAccount();
+    if (!currentUser) return;
+
+    await loadPackages();
+    await refreshBookingData();
+
+  } catch(error) {
+    console.error("Dashboard error:",error);
+    showMessage(
+      "Dashboard could not load all information: " +
+      (error.message || "Unknown error"),
+      "error"
+    );
+  }
+}
+
+/* =========================================
+   9. EVENT LISTENERS
+========================================= */
+
+$("packageSelect").addEventListener("change",showPackageInfo);
+
+$("travellerCountInput").addEventListener(
+  "input",createTravellerFields
+);
+
+$("bookingForm").addEventListener("submit",createBooking);
+
+$("logoutBtn").addEventListener("click",async()=>{
+  if (!confirm("Are you sure you want to logout?")) return;
+
+  const {error} = await db.auth.signOut();
+
+  if (error) {
+    showMessage(error.message,"error");
+    return;
+  }
+
+  window.location.replace("login.html");
+});
+
+setMinimumDate();
+loadDashboard();
+</script>
+
+</body>
+</html>

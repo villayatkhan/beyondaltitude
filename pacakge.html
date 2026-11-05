@@ -1,0 +1,1020 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore Ladakh | Beyond Altitude</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --blue: #4da9df;
+  --deep-blue: #176b9c;
+  --navy: #183d59;
+  --sky: #dff3ff;
+  --pale: #f2f9fd;
+  --white: #fff;
+  --text: #263c4d;
+  --muted: #738594;
+  --border: #dcecf5;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--white);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; }
+
+.page {
+  max-width: 1440px;
+  margin: auto;
+  padding: 0 6%;
+}
+
+/* Header */
+.topbar {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #edf2f5;
+}
+
+.logo {
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: 2px;
+  color: var(--navy);
+}
+
+.logo span { color: var(--blue); }
+
+.top-note {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Hero */
+.hero {
+  margin-top: 25px;
+  min-height: 340px;
+  border-radius: 13px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 55px 20px;
+  background:
+    linear-gradient(120deg, rgba(37,143,205,.84), rgba(108,199,237,.58)),
+    url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=85") center/cover;
+  color: white;
+}
+
+.hero-content { max-width: 750px; }
+
+.hero-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(39px, 5.5vw, 65px);
+  line-height: 1.12;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.hero p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #f1faff;
+  max-width: 570px;
+  margin: auto;
+}
+
+.hero-button {
+  display: inline-block;
+  margin-top: 25px;
+  background: white;
+  color: var(--deep-blue);
+  padding: 13px 25px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 5px 18px rgba(0,0,0,.12);
+  transition: .2s;
+}
+
+.hero-button:hover {
+  transform: translateY(-3px);
+  background: var(--navy);
+  color: white;
+}
+
+/* Featured destination mosaic */
+.featured {
+  padding: 70px 0 65px;
+}
+
+.heading {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.heading-label {
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.heading h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(29px, 4vw, 40px);
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.heading p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 10px;
+  line-height: 1.7;
+}
+
+/* Asymmetric image gallery */
+.destination-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  grid-template-rows: 185px 185px;
+  gap: 13px;
+}
+
+.destination {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  color: white;
+  isolation: isolate;
+}
+
+.destination:first-child {
+  grid-row: span 2;
+}
+
+.destination img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .6s;
+}
+
+.destination:hover img { transform: scale(1.07); }
+
+.destination::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 30%, rgba(0,20,35,.78));
+  z-index: 0;
+}
+
+.destination-info {
+  position: absolute;
+  z-index: 1;
+  bottom: 15px;
+  left: 17px;
+  right: 12px;
+}
+
+.destination-info span {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #c9edff;
+}
+
+.destination-info h3 {
+  font-size: 20px;
+  font-family: 'Playfair Display', serif;
+  margin-top: 4px;
+}
+
+.destination:first-child .destination-info h3 {
+  font-size: 31px;
+}
+
+.destination-info small {
+  font-size: 10px;
+  color: #e4f5ff;
+}
+
+/* Package section */
+.packages {
+  padding: 65px 0 80px;
+  background: var(--pale);
+}
+
+.packages-inner { max-width: 1440px; margin: auto; padding: 0 6%; }
+
+.package-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.package-heading h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(30px, 4vw, 42px);
+  color: var(--navy);
+}
+
+.package-heading p {
+  color: var(--muted);
+  font-size: 12px;
+  max-width: 360px;
+  line-height: 1.7;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 28px;
+}
+
+.filter {
+  border: 1px solid #c9dfeb;
+  background: white;
+  padding: 10px 17px;
+  border-radius: 25px;
+  color: var(--deep-blue);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.filter.active, .filter:hover {
+  background: var(--deep-blue);
+  color: white;
+  border-color: var(--deep-blue);
+}
+
+.package-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 23px;
+}
+
+.package-card {
+  background: white;
+  border-radius: 11px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 5px 18px rgba(30,90,120,.045);
+  transition: .3s;
+}
+
+.package-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 28px rgba(30,90,120,.12);
+}
+
+.package-image {
+  height: 205px;
+  position: relative;
+  overflow: hidden;
+}
+
+.package-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: .5s;
+}
+
+.package-card:hover .package-image img { transform: scale(1.06); }
+
+.package-tag {
+  position: absolute;
+  top: 13px;
+  left: 13px;
+  background: white;
+  color: var(--deep-blue);
+  padding: 7px 11px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.package-body { padding: 20px; }
+
+.duration {
+  font-size: 10px;
+  color: var(--blue);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.package-body h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  color: var(--navy);
+  margin: 10px 0;
+}
+
+.package-body p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted);
+  min-height: 61px;
+}
+
+.location {
+  font-size: 10px;
+  color: var(--deep-blue);
+  margin: 13px 0 16px;
+}
+
+.package-footer {
+  border-top: 1px solid #edf2f5;
+  padding-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.price small {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+  margin-bottom: 4px;
+}
+
+.price strong { font-size: 12px; }
+
+.details {
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 14px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.details:hover { background: var(--deep-blue); }
+
+/* Special collections */
+.special {
+  padding: 75px 0;
+}
+
+.special-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.special-card {
+  height: 270px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  color: white;
+}
+
+.special-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: .5s;
+}
+
+.special-card:hover img { transform: scale(1.06); }
+
+.special-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent, rgba(9,42,65,.85));
+}
+
+.special-info {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1;
+}
+
+.special-info h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 25px;
+  margin-bottom: 7px;
+}
+
+.special-info p {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #e4f5ff;
+}
+
+/* Custom journey */
+.custom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-radius: 13px;
+  overflow: hidden;
+  background: #dff3ff;
+  margin: 0 0 75px;
+}
+
+.custom-copy {
+  padding: 55px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.custom-copy .heading-label { text-align: left; }
+
+.custom-copy h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px;
+  color: var(--navy);
+  line-height: 1.2;
+}
+
+.custom-copy p {
+  color: #5d7586;
+  font-size: 13px;
+  line-height: 1.8;
+  margin: 17px 0 24px;
+}
+
+.custom-copy a {
+  background: var(--deep-blue);
+  color: white;
+  border-radius: 30px;
+  padding: 13px 21px;
+  font-size: 11px;
+  font-weight: 800;
+  align-self: flex-start;
+}
+
+.custom-image { min-height: 330px; }
+.custom-image img { width: 100%; height: 100%; object-fit: cover; }
+
+.end-note {
+  text-align: center;
+  padding: 0 0 55px;
+}
+
+.end-note h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  color: var(--navy);
+}
+
+.end-note p {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 9px;
+}
+
+.footer {
+  text-align: center;
+  padding: 22px;
+  color: #dcecf5;
+  background: var(--navy);
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+/* Details modal */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(15,38,55,.7);
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.modal.show { display: flex; }
+
+.modal-box {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  width: 100%;
+  max-width: 580px;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  right: 17px;
+  top: 12px;
+  border: 0;
+  background: none;
+  font-size: 25px;
+  color: var(--navy);
+}
+
+.modal-box h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  color: var(--navy);
+  margin: 12px 0;
+}
+
+.modal-box p, .modal-box li {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.modal-box h4 { margin: 20px 0 9px; }
+.modal-box ul { padding-left: 20px; }
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+}
+
+.modal-actions a {
+  background: var(--deep-blue);
+  color: white;
+  padding: 12px 18px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.modal-actions button {
+  border: 1px solid var(--border);
+  background: white;
+  padding: 12px 17px;
+  border-radius: 5px;
+  color: var(--navy);
+  font-size: 11px;
+}
+
+@media(max-width: 900px) {
+  .destination-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 230px 170px 170px;
+  }
+  .destination:first-child { grid-row: span 2; }
+  .package-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media(max-width: 600px) {
+  .page, .packages-inner { padding-left: 5%; padding-right: 5%; }
+  .top-note { display: none; }
+  .hero { min-height: 350px; }
+  .destination-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 230px 145px 145px;
+    gap: 9px;
+  }
+  .destination:first-child { grid-column: span 2; grid-row: auto; }
+  .destination-info h3 { font-size: 16px; }
+  .destination:first-child .destination-info h3 { font-size: 25px; }
+  .package-heading { display: block; }
+  .package-heading p { margin-top: 12px; }
+  .package-grid, .special-grid { grid-template-columns: 1fr; }
+  .custom { grid-template-columns: 1fr; }
+  .custom-copy { padding: 32px 24px; }
+  .custom-copy h2 { font-size: 32px; }
+  .custom-image { min-height: 240px; }
+}
+.topbar {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #edf2f5;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.back-link {
+  color: #176b9c;
+  font-size: 12px;
+  font-weight: 700;
+  transition: .2s;
+}
+
+.back-link:hover {
+  color: #4da9df;
+}
+
+.book-link {
+  background: #176b9c;
+  color: white;
+  padding: 12px 19px;
+  border-radius: 25px;
+  font-size: 11px;
+  font-weight: 700;
+  transition: .2s;
+}
+
+.book-link:hover {
+  background: #4da9df;
+}
+
+@media(max-width:600px) {
+  .topbar {
+    height: auto;
+    min-height: 70px;
+    gap: 12px;
+  }
+
+  .top-actions {
+    gap: 10px;
+  }
+
+  .back-link {
+    font-size: 10px;
+  }
+
+  .book-link {
+    padding: 10px 12px;
+    font-size: 10px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+  <header class="topbar">
+  <a href="index.html" class="logo">
+    BEYOND <span>ALTITUDE</span>
+  </a>
+
+  <div class="top-actions">
+    <a href="index.html" class="back-link">
+      ← Back to Main Website
+    </a>
+
+    <a href="login.html" class="book-link">
+      Book Your Journey ↗
+    </a>
+  </div>
+</header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-label">Discover · Explore · Experience</div>
+      <h1>Explore the beauty of Ladakh</h1>
+      <p>
+        Discover extraordinary places, unforgettable landscapes and
+        meaningful experiences through our curated Ladakh journeys.
+      </p>
+      <a href="#packages" class="hero-button">EXPLORE PACKAGES &nbsp; ↗</a>
+    </div>
+  </section>
+
+  <section class="featured">
+    <div class="heading">
+      <div class="heading-label">Featured destinations</div>
+      <h2>The Journey of Destinations</h2>
+      <p>Discover the places that make Ladakh unforgettable.</p>
+    </div>
+
+    <div class="destination-grid">
+      <a href="#packages" class="destination">
+        <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1100&q=85" alt="Leh and Ladakh mountains">
+        <div class="destination-info">
+          <span>01 · The heart of Ladakh</span>
+          <h3>Leh</h3>
+          <small>Heritage · Monasteries · Landscapes</small>
+        </div>
+      </a>
+
+      <a href="#packages" class="destination">
+        <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=85" alt="Nubra Valley mountain scenery">
+        <div class="destination-info">
+          <span>02</span>
+          <h3>Nubra Valley</h3>
+          <small>Mountain adventure</small>
+        </div>
+      </a>
+
+      <a href="#packages" class="destination">
+        <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=800&q=85" alt="Pangong Lake scenery">
+        <div class="destination-info">
+          <span>03</span>
+          <h3>Pangong Lake</h3>
+          <small>Lake escape</small>
+        </div>
+      </a>
+
+      <a href="#packages" class="destination">
+        <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=800&q=85" alt="Traditional village landscape">
+        <div class="destination-info">
+          <span>04</span>
+          <h3>Turtuk</h3>
+          <small>Culture and heritage</small>
+        </div>
+      </a>
+
+      <a href="#packages" class="destination">
+        <img src="https://images.unsplash.com/photo-1464278533981-50106e6176b1?auto=format&fit=crop&w=800&q=85" alt="Mountain scenery">
+        <div class="destination-info">
+          <span>05</span>
+          <h3>Kargil</h3>
+          <small>History and landscapes</small>
+        </div>
+      </a>
+    </div>
+  </section>
+</div>
+
+<section class="packages" id="packages">
+  <div class="packages-inner">
+    <div class="package-heading">
+      <div>
+        <div class="heading-label">Choose your experience</div>
+        <h2>Explore Our Packages</h2>
+      </div>
+      <p>
+        Nine ways to experience Ladakh. Find your preferred journey
+        and explore its highlights.
+      </p>
+    </div>
+
+    <div class="filters">
+      <button class="filter active" data-filter="all">All Packages</button>
+      <button class="filter" data-filter="leh">Leh Region</button>
+      <button class="filter" data-filter="nubra">Nubra & Pangong</button>
+      <button class="filter" data-filter="kargil">Kargil & Zanskar</button>
+      <button class="filter" data-filter="custom">Custom Journey</button>
+    </div>
+
+    <div class="package-grid" id="packageGrid"></div>
+  </div>
+</section>
+
+<div class="page">
+  <section class="special">
+    <div class="heading">
+      <div class="heading-label">Special collections</div>
+      <h2>Travel Beyond the Usual</h2>
+      <p>Experiences designed around your interests.</p>
+    </div>
+
+    <div class="special-grid">
+      <article class="special-card">
+        <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=900&q=85" alt="Student group">
+        <div class="special-info">
+          <h3>Student Special</h3>
+          <p>Educational tours and historical experiences.</p>
+        </div>
+      </article>
+
+      <article class="special-card">
+        <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=900&q=85" alt="Local culture">
+        <div class="special-info">
+          <h3>Cultural Ladakh</h3>
+          <p>Local food, traditions and village experiences.</p>
+        </div>
+      </article>
+
+      <article class="special-card">
+        <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=900&q=85" alt="Outdoor adventure">
+        <div class="special-info">
+          <h3>Adventure Ladakh</h3>
+          <p>Trekking, camping and outdoor exploration.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="custom">
+    <div class="custom-copy">
+      <div class="heading-label">Your personal itinerary</div>
+      <h2>Create Your Own Ladakh Journey</h2>
+      <p>
+        Choose your preferred destinations, decide how long you want
+        to travel and build an experience that is completely yours.
+      </p>
+      <a href="tour.html">CUSTOMISE YOUR TOUR &nbsp; ↗</a>
+    </div>
+    <div class="custom-image">
+      <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1100&q=85" alt="Mountain landscape">
+    </div>
+  </section>
+
+  <div class="end-note">
+    <h2>Your Ladakh story starts here.</h2>
+    <p>Explore the collection and discover your next journey.</p>
+  </div>
+</div>
+
+<footer class="footer">
+  BEYOND ALTITUDE · LADAKH
+</footer>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <button class="close" id="closeModal" aria-label="Close">&times;</button>
+    <div class="heading-label">Your selected journey</div>
+    <h2 id="modalTitle"></h2>
+    <p id="modalDescription"></p>
+    <h4>Package highlights</h4>
+    <ul id="modalHighlights"></ul>
+    <div class="modal-actions">
+      <a href="login.html" id="bookLink">Book Your Journey ↗</a>
+      <button id="continueBtn">Continue Exploring</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const packages = [
+  {
+    id: 1, name: "Leh Explorer", duration: "3 Days / 2 Nights",
+    category: "leh", location: "Leh Town",
+    image: "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=85",
+    description: "Discover the heart of Ladakh through its historic landmarks, monasteries and vibrant markets.",
+    highlights: ["Leh Palace", "Shanti Stupa", "Local monasteries", "Leh market"]
+  },
+  {
+    id: 2, name: "Nubra Valley Adventure", duration: "4 Days / 3 Nights",
+    category: "nubra", location: "Khardung La · Diskit · Hunder · Turtuk",
+    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=85",
+    description: "Journey into the beautiful Nubra Valley and discover its dramatic landscapes.",
+    highlights: ["Khardung La", "Diskit Monastery", "Hunder sand dunes", "Turtuk village"]
+  },
+  {
+    id: 3, name: "Pangong Lake Escape", duration: "3 Days / 2 Nights",
+    category: "nubra", location: "Chang La · Pangong Lake",
+    image: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=900&q=85",
+    description: "Experience the remarkable blue waters and mountain scenery of Pangong Lake.",
+    highlights: ["Chang La route", "Pangong Lake", "Lakeside scenery", "Nearby villages"]
+  },
+  {
+    id: 4, name: "Turtuk Cultural Journey", duration: "4 Days / 3 Nights",
+    category: "nubra", location: "Turtuk · Nubra Valley",
+    image: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=900&q=85",
+    description: "Explore Turtuk's distinctive heritage, village life, food and traditions.",
+    highlights: ["Turtuk village", "Balti heritage", "Local cuisine", "Village experiences"]
+  },
+  {
+    id: 5, name: "Kargil Discovery", duration: "4 Days / 3 Nights",
+    category: "kargil", location: "Kargil · Drass · Suru Valley",
+    image: "https://images.unsplash.com/photo-1464278533981-50106e6176b1?auto=format&fit=crop&w=900&q=85",
+    description: "Discover Kargil's heritage and the remarkable landscapes of the Suru region.",
+    highlights: ["Kargil town", "Drass", "Suru Valley", "Local heritage"]
+  },
+  {
+    id: 6, name: "Zanskar Expedition", duration: "6 Days / 5 Nights",
+    category: "kargil", location: "Zanskar · Padum",
+    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=85",
+    description: "Explore remote Zanskar, its monasteries, villages and mountain landscapes.",
+    highlights: ["Padum", "Zanskar monasteries", "Remote villages", "Mountain landscapes"]
+  },
+  {
+    id: 7, name: "Complete Leh Experience", duration: "6 Days / 5 Nights",
+    category: "leh", location: "Leh · Nubra · Pangong",
+    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=85",
+    description: "A combined journey through Leh, Nubra Valley and Pangong Lake.",
+    highlights: ["Leh sightseeing", "Nubra Valley", "Pangong Lake", "Mountain routes"]
+  },
+  {
+    id: 8, name: "Leh + Kargil Grand Journey", duration: "8 Days / 7 Nights",
+    category: "kargil", location: "Leh · Kargil",
+    image: "https://images.unsplash.com/photo-1464278533981-50106e6176b1?auto=format&fit=crop&w=900&q=85",
+    description: "Experience Leh and Kargil in one extended journey across Ladakh.",
+    highlights: ["Leh region", "Kargil town", "Drass", "Regional culture"]
+  },
+  {
+    id: 9, name: "Customise Your Ladakh Journey", duration: "Flexible Duration",
+    category: "custom", location: "Destinations across UT Ladakh",
+    image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=900&q=85",
+    description: "Create a personalised itinerary by selecting your preferred Ladakh destinations.",
+    highlights: ["Select destinations", "Choose duration", "Set preferences", "Personalised itinerary"]
+  }
+];
+
+const grid = document.getElementById("packageGrid");
+
+function renderPackages(filter = "all") {
+  const items = filter === "all"
+    ? packages
+    : packages.filter(p => p.category === filter);
+
+  grid.innerHTML = items.map(p => `
+    <article class="package-card">
+      <div class="package-image">
+        <img src="${p.image}" alt="${p.name}" loading="lazy">
+        <span class="package-tag">JOURNEY ${String(p.id).padStart(2,"0")}</span>
+      </div>
+      <div class="package-body">
+        <div class="duration">${p.duration}</div>
+        <h3>${p.name}</h3>
+        <p>${p.description}</p>
+        <div class="location">📍 ${p.location}</div>
+        <div class="package-footer">
+          <div class="price">
+            <small>Package pricing</small>
+            <strong>Enquire for Price</strong>
+          </div>
+          <button class="details" onclick="showDetails(${p.id})">VIEW DETAILS ↗</button>
+        </div>
+      </div>
+    </article>
+  `).join("");
+}
+
+function showDetails(id) {
+  const p = packages.find(item => item.id === id);
+  if (!p) return;
+
+  document.getElementById("modalTitle").textContent = p.name;
+  document.getElementById("modalDescription").textContent =
+    p.description + " Suggested duration: " + p.duration + ".";
+
+  const list = document.getElementById("modalHighlights");
+  list.replaceChildren();
+
+  p.highlights.forEach(point => {
+    const li = document.createElement("li");
+    li.textContent = point;
+    list.appendChild(li);
+  });
+
+  document.getElementById("bookLink").href =
+    p.category === "custom"
+      ? "tour.html"
+      : "login.html?package=" + encodeURIComponent(p.name);
+
+  document.getElementById("modal").classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+
+function closeModal() {
+  document.getElementById("modal").classList.remove("show");
+  document.body.style.overflow = "";
+}
+
+document.getElementById("closeModal").addEventListener("click", closeModal);
+document.getElementById("continueBtn").addEventListener("click", closeModal);
+
+document.getElementById("modal").addEventListener("click", function(e) {
+  if (e.target === this) closeModal();
+});
+
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape") closeModal();
+});
+
+document.querySelectorAll(".filter").forEach(button => {
+  button.addEventListener("click", function() {
+    document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    renderPackages(this.dataset.filter);
+  });
+});
+
+renderPackages();
+</script>
+
+</body>
+</html>
