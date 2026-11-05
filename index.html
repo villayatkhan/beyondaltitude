@@ -144,30 +144,64 @@
   }
 })();
 </script>
-```
     </script>
 
 
     
 <!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-R5M4C1W46J"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
   gtag('js', new Date());
   gtag('config', 'G-R5M4C1W46J');
 </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Supabase Library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
-    <script>
- 
+<!-- Supabase Enquiry Form -->
+<script>
+
+  // ==========================================
+  // SUPABASE CONFIGURATION
+  // ==========================================
+
+  const SUPABASE_URL =
+    "https://gtiqyltzlcqzcpqnpsbb.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_fwzYRS8chR8nN3A2C7h08g_XS5zmDw3";
+
+
+  // ==========================================
+  // INITIALIZE SUPABASE
+  // ==========================================
+
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+  // ==========================================
+  // ENQUIRY FORM SUBMISSION
+  // ==========================================
 
   const enquiryForm = document.getElementById("enquiryForm");
 
   if (enquiryForm) {
+
     enquiryForm.addEventListener("submit", async function (event) {
+
       event.preventDefault();
 
       const submitButton = enquiryForm.querySelector(
@@ -175,12 +209,15 @@
       );
 
       const originalText = submitButton
-        ? (submitButton.tagName === "INPUT"
-            ? submitButton.value
-            : submitButton.textContent)
+        ? (
+            submitButton.tagName === "INPUT"
+              ? submitButton.value
+              : submitButton.textContent
+          )
         : "";
 
       if (submitButton) {
+
         submitButton.disabled = true;
 
         if (submitButton.tagName === "INPUT") {
@@ -188,34 +225,80 @@
         } else {
           submitButton.textContent = "Submitting...";
         }
+
       }
 
       try {
+
         const formData = new FormData(enquiryForm);
 
         const enquiry = {
+
           name: formData.get("name")?.trim(),
+
           email: formData.get("email")?.trim(),
+
           phone: formData.get("phone")?.trim() || null,
+
           travel_date: formData.get("travel_date") || null,
+
           group_size: formData.get("group_size") || null,
+
           interests: formData.get("interests") || null,
+
           budget: formData.get("budget") || null,
+
           message: formData.get("message")?.trim() || null
+
         };
 
+
+        // ==========================================
+        // VALIDATION
+        // ==========================================
+
         if (!enquiry.name || !enquiry.email) {
-          throw new Error("Please enter your name and email.");
+
+          throw new Error(
+            "Please enter your name and email."
+          );
+
         }
 
-        const { error } = await supabaseClient
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(enquiry.email)) {
+
+          throw new Error(
+            "Please enter a valid email address."
+          );
+
+        }
+
+
+        // ==========================================
+        // SAVE ENQUIRY TO SUPABASE
+        // ==========================================
+
+        const { data, error } = await supabaseClient
           .from("enquiries")
-          .insert([enquiry]);
+          .insert([enquiry])
+          .select();
 
         if (error) {
+
           console.error("Supabase error:", error);
-          throw new Error("Your enquiry could not be saved. Please try again.");
+
+          throw new Error(
+            "Your enquiry could not be saved. Please try again."
+          );
+
         }
+
+
+        // ==========================================
+        // SUCCESS MESSAGE
+        // ==========================================
 
         alert(
           "Thank you for choosing Beyond Altitude!\n\n" +
@@ -225,12 +308,26 @@
 
         enquiryForm.reset();
 
-      } catch (error) {
-        console.error("Enquiry submission failed:", error);
-        alert(error.message || "Something went wrong. Please try again.");
+      }
 
-      } finally {
+      catch (error) {
+
+        console.error(
+          "Enquiry submission failed:",
+          error
+        );
+
+        alert(
+          error.message ||
+          "Something went wrong. Please try again."
+        );
+
+      }
+
+      finally {
+
         if (submitButton) {
+
           submitButton.disabled = false;
 
           if (submitButton.tagName === "INPUT") {
@@ -238,15 +335,25 @@
           } else {
             submitButton.textContent = originalText;
           }
+
         }
+
       }
+
     });
-  } else {
+
+  }
+
+  else {
+
     console.error(
       'Enquiry form not found. Make sure your form has id="enquiryForm".'
     );
+
   }
+
 </script>
+
 </body>
 </head>
 
