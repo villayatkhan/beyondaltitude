@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +7,7 @@
 <meta name="theme-color" content="#173e35">
 <title>Custom Ladakh Tour | Beyond Altitude</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root {
   --green:#173e35;
@@ -17,40 +19,48 @@
   --muted:#718078;
   --line:#e7ece8;
 }
+
 * {
   box-sizing:border-box;
   margin:0;
   padding:0;
   font-family:Arial,sans-serif;
 }
+
 body {
   background:var(--bg);
   color:var(--ink);
   line-height:1.5;
 }
+
 header {
   background:linear-gradient(110deg,var(--green),var(--green2));
   color:#fff;
   padding:28px max(20px,calc((100% - 1050px)/2));
 }
+
 header a {
   color:#f1d29b;
   text-decoration:none;
   font-size:13px;
 }
+
 header h1 {
   font-size:28px;
   margin:13px 0 6px;
 }
+
 header p {
   color:#e0e9e3;
   font-size:14px;
 }
+
 main {
   max-width:1050px;
   margin:28px auto;
   padding:0 18px 50px;
 }
+
 .card {
   background:#fff;
   border:1px solid var(--line);
@@ -58,25 +68,30 @@ main {
   padding:23px;
   margin-bottom:18px;
 }
+
 .card h2 {
   font-size:18px;
   color:var(--green);
   margin-bottom:8px;
 }
+
 .muted {
   font-size:13px;
   color:var(--muted);
   line-height:1.6;
   margin-bottom:16px;
 }
+
 .grid {
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:14px;
 }
+
 .field {
   margin-bottom:14px;
 }
+
 .field label {
   display:block;
   font-size:13px;
@@ -84,6 +99,7 @@ main {
   color:#52635a;
   margin-bottom:7px;
 }
+
 .field input,
 .field select,
 .field textarea {
@@ -95,27 +111,32 @@ main {
   color:var(--ink);
   font-size:14px;
 }
+
 .field textarea {
   min-height:95px;
   resize:vertical;
 }
+
 .field input:focus,
 .field select:focus,
 .field textarea:focus {
   outline:2px solid #b8cfc0;
   border-color:var(--green);
 }
+
 .destinations {
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:10px;
 }
+
 .destination {
   border:1px solid var(--line);
   border-radius:9px;
   padding:12px;
   background:#fafcf9;
 }
+
 .destination label {
   display:flex;
   align-items:flex-start;
@@ -125,22 +146,26 @@ main {
   color:var(--ink);
   cursor:pointer;
 }
+
 .destination small {
   display:block;
   color:var(--muted);
   font-weight:normal;
   margin:5px 0 0 25px;
 }
+
 .destination input {
   margin-top:3px;
   accent-color:var(--green);
 }
+
 .order-list {
   margin-top:14px;
   padding:14px;
   background:var(--light);
   border-radius:9px;
 }
+
 .order-row {
   display:grid;
   grid-template-columns:1fr 110px;
@@ -150,26 +175,31 @@ main {
   border-bottom:1px solid #dce6df;
   font-size:13px;
 }
+
 .order-row:last-child {
   border-bottom:0;
 }
+
 .order-row input {
   width:100%;
   padding:8px;
   border:1px solid #cdd9d0;
   border-radius:6px;
 }
+
 .traveller {
   background:#f7f9f7;
   padding:15px;
   border-radius:9px;
   margin:12px 0;
 }
+
 .traveller h3 {
   font-size:14px;
   color:var(--green);
   margin-bottom:10px;
 }
+
 .btn {
   display:inline-block;
   background:var(--green);
@@ -181,13 +211,16 @@ main {
   text-decoration:none;
   font-size:14px;
 }
+
 .btn:hover {
   background:#31594d;
 }
+
 .btn:disabled {
   opacity:.55;
   cursor:not-allowed;
 }
+
 .message {
   display:none;
   padding:12px 15px;
@@ -195,37 +228,45 @@ main {
   margin-bottom:18px;
   font-size:13px;
 }
+
 .message.error {
   display:block;
   background:#fff0ee;
   color:#a33b32;
 }
+
 .message.info {
   display:block;
   background:#edf4ef;
   color:#31594d;
 }
+
 .message.success {
   display:block;
   background:#e5f4e8;
   color:#246b40;
 }
+
 .actions {
   display:flex;
   gap:12px;
   align-items:center;
   flex-wrap:wrap;
 }
+
 @media(max-width:650px) {
   .grid,.destinations {
     grid-template-columns:1fr;
   }
+
   .card {
     padding:17px;
   }
+
   header h1 {
     font-size:23px;
   }
+
   .order-row {
     grid-template-columns:1fr 85px;
   }
@@ -363,12 +404,16 @@ main {
 </main>
 
 <script>
+"use strict";
 
 const SUPABASE_URL = "https://gtiqyltzlcqzcpqnpsbb.supabase.co";
-
 const SUPABASE_KEY = "sb_publishable_fwzYRS8chR8nN3A2C7h08g_XS5zmDw3";
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
 const $ = id => document.getElementById(id);
 
 let currentUser = null;
@@ -386,6 +431,7 @@ const safe = value => String(value ?? "").replace(/[&<>"']/g, ch => ({
 function showMessage(message, type = "info") {
   $("message").className = "message " + type;
   $("message").textContent = message;
+
   $("message").scrollIntoView({
     behavior:"smooth",
     block:"center"
@@ -404,7 +450,9 @@ function setMinimumDate() {
 async function loadUserAndPackage() {
   const {data,error} = await db.auth.getSession();
 
-  if (error || !data.session) {
+  if (error) throw error;
+
+  if (!data.session) {
     window.location.replace("login.html");
     return false;
   }
@@ -413,8 +461,11 @@ async function loadUserAndPackage() {
 
   const meta = currentUser.user_metadata || {};
 
-  $("contactName").value = meta.full_name || meta.name || "";
-  $("contactEmail").value = currentUser.email || "";
+  $("contactName").value =
+    meta.full_name || meta.name || "";
+
+  $("contactEmail").value =
+    currentUser.email || "";
 
   const packageId = new URLSearchParams(
     window.location.search
@@ -435,7 +486,10 @@ async function loadUserAndPackage() {
 
   if (pkgError) throw pkgError;
 
-  if (!pkg || String(pkg.package_type || "").toLowerCase() !== "custom") {
+  if (
+    !pkg ||
+    String(pkg.package_type || "").toLowerCase() !== "custom"
+  ) {
     throw new Error(
       "The selected package is not an active Custom Ladakh Package."
     );
@@ -601,13 +655,28 @@ function getOrderedDestinations() {
 async function submitCustomTour(event) {
   event.preventDefault();
 
-  if (!currentUser || !customPackage) return;
+  const btn = $("submitBtn");
+
+  if (btn.disabled) return;
+
+  if (!currentUser || !customPackage) {
+    showMessage(
+      "Your login or selected package could not be verified. Please return to the dashboard and try again.",
+      "error"
+    );
+    return;
+  }
+
+  if (!$("customTourForm").checkValidity()) {
+    $("customTourForm").reportValidity();
+    return;
+  }
 
   let orderedDestinations;
 
   try {
     orderedDestinations = getOrderedDestinations();
-  } catch(error) {
+  } catch (error) {
     showMessage(error.message,"error");
     return;
   }
@@ -630,56 +699,110 @@ async function submitCustomTour(event) {
     return;
   }
 
-  const btn = $("submitBtn");
+  if (
+    !$("contactName").value.trim() ||
+    !$("contactEmail").value.trim() ||
+    !$("contactPhone").value.trim()
+  ) {
+    showMessage(
+      "Please complete the booking contact details.",
+      "error"
+    );
+    return;
+  }
+
   btn.disabled = true;
   btn.textContent = "Submitting request…";
 
+  showMessage(
+    "Submitting your custom tour request securely…",
+    "info"
+  );
+
   try {
+    const bookingPayload = {
+      p_package_id:customPackage.id,
+      p_travel_date:$("travelDate").value,
+      p_traveller_count:travellers.length,
+      p_contact_name:$("contactName").value.trim(),
+      p_contact_email:$("contactEmail").value.trim(),
+      p_contact_phone:$("contactPhone").value.trim(),
+      p_travellers:travellers,
+      p_duration_days:Number($("durationDays").value),
+      p_accommodation_type:$("accommodation").value,
+      p_transport_type:$("transport").value,
+      p_special_requirements:
+        $("specialRequirements").value.trim() || null,
+      p_destinations:orderedDestinations
+    };
+
     const {data,error} = await db.rpc(
       "create_pending_booking",
-      {
-        p_package_id:customPackage.id,
-        p_travel_date:$("travelDate").value,
-        p_traveller_count:travellers.length,
-        p_contact_name:$("contactName").value.trim(),
-        p_contact_email:$("contactEmail").value.trim(),
-        p_contact_phone:$("contactPhone").value.trim(),
-        p_travellers:travellers,
-        p_duration_days:Number($("durationDays").value),
-        p_accommodation_type:$("accommodation").value,
-        p_transport_type:$("transport").value,
-        p_special_requirements:
-          $("specialRequirements").value.trim() || null,
-        p_destinations:orderedDestinations
-      }
+      bookingPayload
     );
 
-    if (error) throw error;
+    if (error) {
+      console.error(
+        "Supabase create_pending_booking error:",
+        error
+      );
 
-    const result = data?.[0];
-
-    if (!result?.booking_reference) {
       throw new Error(
-        "The booking reference was not returned. Please check Pending Bookings in your dashboard."
+        error.message || "Supabase could not save your request."
+      );
+    }
+
+    // Accept either an array or a single returned object.
+    let result = Array.isArray(data) ? data[0] : data;
+
+    if (typeof result === "string") {
+      try {
+        result = JSON.parse(result);
+      } catch (_) {}
+    }
+
+    if (Array.isArray(result)) {
+      result = result[0];
+    }
+
+    const bookingReference =
+      result?.booking_reference ||
+      result?.reference ||
+      null;
+
+    if (!bookingReference) {
+      console.error(
+        "Unexpected RPC response:",
+        data
+      );
+
+      throw new Error(
+        "The database did not return a booking reference. Please check the database function before submitting again."
       );
     }
 
     showMessage(
-      "Your custom tour request has been submitted. Reference: " +
-      result.booking_reference +
-      ". Redirecting to your dashboard…",
+      "Your custom tour request has been saved successfully. Booking reference: " +
+      bookingReference +
+      ". Taking you to your dashboard…",
       "success"
     );
 
+    btn.textContent = "Request Submitted";
+
     setTimeout(() => {
       window.location.replace("dashboard.html#pending");
-    },1200);
+    },1500);
 
   } catch(error) {
-    console.error("Custom tour submission error:",error);
+    console.error(
+      "Custom tour submission failed:",
+      error
+    );
 
     showMessage(
-      error.message || "Could not submit your custom tour request.",
+      error.message ||
+      "Could not submit your request. Please try again.",
       "error"
     );
 
@@ -704,6 +827,7 @@ $("customTourForm").addEventListener(
 
   try {
     const ok = await loadUserAndPackage();
+
     if (!ok) return;
 
     await loadDestinations();
@@ -712,16 +836,15 @@ $("customTourForm").addEventListener(
     console.error(error);
 
     showMessage(
-      error.message || "Could not load the custom tour form.",
+      error.message ||
+      "Could not load the custom tour form.",
       "error"
     );
 
     $("submitBtn").disabled = true;
   }
 })();
-
 </script>
 
 </body>
-
 </html>
