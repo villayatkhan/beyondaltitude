@@ -352,7 +352,7 @@ button:disabled {
                     >
                 </div>
 
-                <button class="primary-btn" id="sendOtpBtn" type="submit">
+                <button class="primary-btn" id="sendOtpBtn" type="submit" onclick="g1()">
                     Send verification code
                 </button>
 
@@ -379,7 +379,7 @@ button:disabled {
                         >
                     </div>
 
-                    <button class="primary-btn" id="verifyBtn" type="submit">
+                    <button class="primary-btn" id="verifyBtn" type="submit" onclick="g1()">
                         Verify and continue
                     </button>
 
@@ -406,6 +406,16 @@ button:disabled {
 </main>
 
 <script>
+
+function g1() {
+  alert(
+    "Please try signing in using Google.\n\n" +
+    "Our team is currently working on the OTP verification process. " +
+    "We sincerely apologise for the inconvenience and appreciate your patience and understanding.\n\n" +
+    "Thank you for your cooperation.\n\n" +
+    "Team Beyond Altitude"
+  );
+}
 
 // SUPABASE CONNECTION
 
